@@ -1,0 +1,117 @@
+openapi: 3.0.0
+info:
+  title: API Dropbox Service
+  description: Описание API Dropbox Service
+  version: 1.0.0
+
+servers:
+  - url: https://localhost:8081
+
+paths:
+  /users:
+    get:
+      summary: Получить всех пользователей
+      operationId: getAllUsers
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserRs'
+
+    post:
+      summary: Создать пользователя
+      operationId: createUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddUserRq'
+      responses:
+        '200':
+          description: Пользователь создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRs'
+        '400':
+          description: Неверный запрос
+
+  /users/{email}:
+    get:
+      summary: Получить информацию о пользователе по email
+      operationId: getUserByEmail
+      parameters:
+        - name: email
+          in: path
+          required: true
+          description: Email пользователя
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRs'
+        '404':
+          description: Пользователь не найден
+
+    put:
+      summary: Обновить информацию о пользователе по email
+      operationId: updateUserByEmail
+      parameters:
+        - name: email
+          in: path
+          required: true
+          description: Email пользователя
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRq'
+      responses:
+        '200':
+          description: Информация о пользователе обновлена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRs'
+        '400':
+          description: Неверный запрос
+
+components:
+  schemas:
+    UserRs:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+
+    AddUserRq:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+
+    UpdateUserRq:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string

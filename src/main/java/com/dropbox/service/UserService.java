@@ -27,7 +27,7 @@ public class UserService {
                 .toList();
     }
 
-    public UserRs save(final AddUserRq addUserRq) {
+    public UserRs createUser(final AddUserRq addUserRq) {
         final User user = userMapper.toUser(addUserRq);
 
         userRepository.findUserByEmail(user.getMail()).orElseThrow(() -> new ServiceException(ErrorCode.ERR_CODE_001, user.getMail()));
@@ -42,7 +42,7 @@ public class UserService {
         return userMapper.toUserRs(user);
     }
 
-    public UserRs update(final UpdateUserRq updateUserRq, final String email) {
+    public UserRs updateUserByEmail(final UpdateUserRq updateUserRq, final String email) {
         final User user = userRepository.findUserByEmail(email).orElseThrow(() -> new ServiceException(ErrorCode.ERR_CODE_001, email));
 
         userMapper.update(user, updateUserRq);

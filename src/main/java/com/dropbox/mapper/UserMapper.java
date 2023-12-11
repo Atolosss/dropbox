@@ -5,6 +5,7 @@ import com.dropbox.model.dto.UpdateUserRq;
 import com.dropbox.model.dto.UserRs;
 import com.dropbox.model.entity.User;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
 
 @Mapper(config = MapperConfiguration.class)
 public interface UserMapper {
@@ -12,5 +13,5 @@ public interface UserMapper {
 
     UserRs toUserRs(User user);
 
-    void update(User user, UpdateUserRq updateUserRq);
+    void update(@MappingTarget User user, UpdateUserRq updateUserRq);
 }
