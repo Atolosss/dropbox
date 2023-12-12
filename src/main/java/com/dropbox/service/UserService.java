@@ -37,7 +37,7 @@ public class UserService {
     }
 
     public UserRs findByEmail(final String email) {
-        User user = userRepository.findUserByEmail(email).orElseThrow(() -> new ServiceException(ErrorCode.ERR_CODE_002, email));
+        final User user = userRepository.findUserByEmail(email).orElseThrow(() -> new ServiceException(ErrorCode.ERR_CODE_002, email));
 
         return userMapper.toUserRs(user);
     }
@@ -49,5 +49,4 @@ public class UserService {
 
         return userMapper.toUserRs(user);
     }
-
 }
