@@ -30,20 +30,20 @@ public class UserService {
     public UserRs createUser(final AddUserRq addUserRq) {
         final User user = userMapper.toUser(addUserRq);
 
-        userRepository.findUserByEmail(user.getMail()).orElseThrow(() -> new ServiceException(ErrorCode.ERR_CODE_001, user.getMail()));
+        userRepository.findUserByMail(user.getMail()).orElseThrow(() -> new ServiceException(ErrorCode.ERR_CODE_001, user.getMail()));
         userRepository.insert(user);
 
         return userMapper.toUserRs(user);
     }
 
     public UserRs findByEmail(final String email) {
-        final User user = userRepository.findUserByEmail(email).orElseThrow(() -> new ServiceException(ErrorCode.ERR_CODE_002, email));
+        final User user = userRepository.findUserByMail(email).orElseThrow(() -> new ServiceException(ErrorCode.ERR_CODE_002, email));
 
         return userMapper.toUserRs(user);
     }
 
     public UserRs updateUserByEmail(final UpdateUserRq updateUserRq, final String email) {
-        final User user = userRepository.findUserByEmail(email).orElseThrow(() -> new ServiceException(ErrorCode.ERR_CODE_001, email));
+        final User user = userRepository.findUserByMail(email).orElseThrow(() -> new ServiceException(ErrorCode.ERR_CODE_001, email));
 
         userMapper.update(user, updateUserRq);
 

@@ -1,7 +1,6 @@
 type: object
 required:
   - id
-  - email
 properties:
   firstname:
     type: string
