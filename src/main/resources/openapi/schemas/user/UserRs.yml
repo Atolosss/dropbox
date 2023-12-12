@@ -1,0 +1,15 @@
+type: object
+required:
+  - firstname
+  - lastname
+  - birthday
+properties:
+  firstname:
+    type: string
+    example: max
+  lastname:
+    type: string
+    example: komar
+  birthday:
+    type: data
+    example: 20.03.1993

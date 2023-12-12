@@ -1,0 +1,34 @@
+get:
+  tags:
+    - user
+  summary: Get user for email
+  description: Get user information
+  operationId: findByEmail
+  responses:
+    200:
+      description: Success
+      content:
+        application/json:
+          schema:
+            ref: '../schemas/user/UserRs.yml'
+    404:
+      description: Users not found
+      content:
+        application/json: { }
+put:
+  tags:
+    - user
+  summary: Update user
+  description: Update user information
+  operationId: updateUserByEmail
+  responses:
+    200:
+      description: Success
+      content:
+        application/json:
+          schema:
+            ref: '../schemas/user/UserRs.yml'
+    404:
+      description: Users not update
+      content:
+        application/json: { }

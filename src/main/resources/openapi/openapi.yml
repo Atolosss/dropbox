@@ -1,0 +1,32 @@
+openapi: "3.0.0"
+info:
+  title: user app
+  description: "user app description"
+  termsOfService: https://editor.swagger.io/ or https://editor-next.swagger.io/
+  contact:
+    email: example@gmail.com
+    url: https://swagger.io/specification/
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 0.0.1-SNAPSHOT
+externalDocs:
+  description: Find out more about swagger
+  url: https://swagger.io/specification/
+servers:
+  - url: http://localhost:8080
+tags:
+  - name: user
+    description: Operations about user
+    externalDocs:
+      description: Find out more about our store
+      url: https://editor-next.swagger.io/
+paths:
+  /api/users:
+    $ref: "./paths/user/user.yml"
+  /api/users/{email}:
+    $ref: "./paths/user/users_email.yml"
+components:
+  schemas:
+    UserRs: { $ref: "./schemas/user/UserRs.yml" }
+    UserRsList: { $ref: "./schemas/user/UserRsList.yml" }
