@@ -1,0 +1,24 @@
+post:
+  tags:
+    - user
+  summary: Create user
+  description: Create User in bd
+  operationId: createUser
+  requestBody:
+    description: Created user object
+    content:
+      '*/*':
+        schema:
+          $ref: '../schemas/user/UserRegistrationRq.yml'
+    required: true
+  responses:
+    200:
+      description: Success
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/user/UserRegistrationRs.yml'
+    400:
+      description: There is already a user with this email
+      content:
+        application/json: { }

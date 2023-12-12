@@ -1,6 +1,6 @@
 package com.dropbox.exceptions;
 
-import com.dropbox.model.enums.ErrorCode;
+import com.dropbox.constant.ErrorCode;
 
 import java.io.Serial;
 

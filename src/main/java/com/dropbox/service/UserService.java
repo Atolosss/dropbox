@@ -1,17 +1,16 @@
 package com.dropbox.service;
 
+import com.dropbox.constant.ErrorCode;
 import com.dropbox.exceptions.ServiceException;
 import com.dropbox.mapper.UserMapper;
-import com.dropbox.model.dto.AddUserRq;
-import com.dropbox.model.dto.UpdateUserRq;
-import com.dropbox.model.dto.UserRs;
 import com.dropbox.model.entity.User;
-import com.dropbox.model.enums.ErrorCode;
 import com.dropbox.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
+import ru.gmm.demo.model.api.UserPatchRq;
+import ru.gmm.demo.model.api.UserPatchRs;
+import ru.gmm.demo.model.api.UserRegistrationRq;
+import ru.gmm.demo.model.api.UserRegistrationRs;
 
 @Service
 @AllArgsConstructor
@@ -20,33 +19,21 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
-    public List<UserRs> getAllUsers() {
-        return userRepository.findAll()
-                .stream()
-                .map(userMapper::toUserRs)
-                .toList();
+    public UserRegistrationRs createUser(final UserRegistrationRq userRegistrationRq) {
+        if (userRepository.findUserByEmail(userRegistrationRq.getEmail()).isPresent()) {
+            throw new ServiceException(ErrorCode.ERR_CODE_001, userRegistrationRq.getEmail());
+        }
+
+        final User user = userMapper.toUser(userRegistrationRq);
+        final User inserted = userRepository.save(user);
+        return userMapper.toUserRegistrationRs(inserted);
     }
 
-    public UserRs createUser(final AddUserRq addUserRq) {
-        final User user = userMapper.toUser(addUserRq);
-
-        userRepository.findUserByMail(user.getMail()).orElseThrow(() -> new ServiceException(ErrorCode.ERR_CODE_001, user.getMail()));
-        userRepository.insert(user);
-
-        return userMapper.toUserRs(user);
-    }
-
-    public UserRs findByEmail(final String email) {
-        final User user = userRepository.findUserByMail(email).orElseThrow(() -> new ServiceException(ErrorCode.ERR_CODE_002, email));
-
-        return userMapper.toUserRs(user);
-    }
-
-    public UserRs updateUserByEmail(final UpdateUserRq updateUserRq, final String email) {
-        final User user = userRepository.findUserByMail(email).orElseThrow(() -> new ServiceException(ErrorCode.ERR_CODE_001, email));
-
-        userMapper.update(user, updateUserRq);
-
-        return userMapper.toUserRs(user);
+    public UserPatchRs patchUser(final String id, final UserPatchRq userPatchRq) {
+        final User user = userRepository.findById(id)
+                .orElseThrow();
+        userMapper.update(user, userPatchRq);
+        final User saved = userRepository.save(user);
+        return userMapper.toUserPatchRs(saved);
     }
 }

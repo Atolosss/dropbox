@@ -15,16 +15,18 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+
 @Document
 public class User {
     @Id
     private String id;
     @Indexed(unique = true)
-    private String mail;
+    private String email;
     private String password;
-    private String firstname;
-    private String lastname;
-    private LocalDate birthday;
-    private LocalDateTime create;
+    private String firstName;
+    private String lastName;
+    private LocalDate dateOfBirth;
+    private LocalDateTime createDateTime;
+    private LocalDateTime updateDateTime;
 
 }

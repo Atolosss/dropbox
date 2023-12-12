@@ -1,0 +1,17 @@
+type: object
+properties:
+  id:
+    type: string
+    example: 550e8400-e29b-41d4-a716-446655440000
+  email:
+    type: string
+    example: example@mail.ru
+  firstName:
+    type: string
+    example: igor
+  lastName:
+    type: string
+    example: petrov
+  dateOfBirth:
+    type: string
+    example: 16.05.1995

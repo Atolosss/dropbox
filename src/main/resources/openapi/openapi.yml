@@ -21,12 +21,11 @@ tags:
     externalDocs:
       description: Find out more about our store
       url: https://editor-next.swagger.io/
-paths:
-  /api/users:
-    $ref: "./paths/user/user.yml"
-  /api/users/{email}:
-    $ref: "./paths/user/user_email.yml"
 components:
   schemas:
-    UserRs: { $ref: "./schemas/user/UserRs.yml" }
-    UserRsList: { $ref: "./schemas/user/UserRsList.yml" }
+    UserRegistrationRq: { $ref: "./schemas/user/UserRegistrationRq.yml" }
+paths:
+  /api/v1/users:
+    $ref: "./paths/user.yml"
+  /api/v1/users/{id}:
+    $ref: "./paths/user_id.yml"

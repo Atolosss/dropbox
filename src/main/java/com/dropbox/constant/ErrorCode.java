@@ -1,4 +1,4 @@
-package com.dropbox.model.enums;
+package com.dropbox.constant;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
