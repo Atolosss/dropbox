@@ -15,20 +15,20 @@ get:
       description: Users not found
       content:
         application/json: { }
-  post:
-    tags:
-      - user
-    summary: Save User
-    description: Save User in bd
-    operationId: createUser
-    responses:
-      200:
-        description: Success
-        content:
-          application/json:
-            schema:
-              ref: '../schemas/user/UserRs.yml'
-      400:
-        description: There is already a user with this email
-        content:
-          application/json: { }
+post:
+  tags:
+    - user
+  summary: Save user
+  description: Save User in bd
+  operationId: createUser
+  responses:
+    200:
+      description: Success
+      content:
+        application/json:
+          schema:
+            ref: '../schemas/user/UserRs.yml'
+    400:
+      description: There is already a user with this email
+      content:
+        application/json: { }

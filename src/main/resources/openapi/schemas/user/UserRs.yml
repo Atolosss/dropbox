@@ -1,8 +1,7 @@
 type: object
 required:
-  - firstname
-  - lastname
-  - birthday
+  - id
+  - email
 properties:
   firstname:
     type: string
@@ -11,5 +10,5 @@ properties:
     type: string
     example: komar
   birthday:
-    type: data
-    example: 20.03.1993
+    type: date
+    example: 1993-03-20

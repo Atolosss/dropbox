@@ -25,7 +25,7 @@ paths:
   /api/users:
     $ref: "./paths/user/user.yml"
   /api/users/{email}:
-    $ref: "./paths/user/users_email.yml"
+    $ref: "./paths/user/user_email.yml"
 components:
   schemas:
     UserRs: { $ref: "./schemas/user/UserRs.yml" }
