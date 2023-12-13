@@ -9,6 +9,9 @@ import ru.gmm.demo.model.api.UserPatchRq;
 import ru.gmm.demo.model.api.UserPatchRs;
 import ru.gmm.demo.model.api.UserRegistrationRq;
 import ru.gmm.demo.model.api.UserRegistrationRs;
+import ru.gmm.demo.model.api.UserRs;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,5 +26,22 @@ public class UserController implements UserApi {
     @Override
     public ResponseEntity<UserPatchRs> patchUser(final String id, final UserPatchRq userPatchRq) {
         return ResponseEntity.ok(userService.patchUser(id, userPatchRq));
+    }
+
+    @Override
+    public ResponseEntity<Void> deleteUser(final String id) {
+        userService.deleteUser(id);
+        return ResponseEntity.ok(null);
+
+    }
+
+    @Override
+    public ResponseEntity<List<UserRs>> getAllUser() {
+        return ResponseEntity.ok(userService.getAllUsers());
+    }
+
+    @Override
+    public ResponseEntity<UserRs> getUser(final String id) {
+        return ResponseEntity.ok(userService.getUser(id));
     }
 }

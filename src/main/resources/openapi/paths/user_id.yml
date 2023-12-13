@@ -30,3 +30,51 @@ patch:
       description: Something went wrong
       content:
         application/json: { }
+delete:
+  tags:
+    - user
+  summary: Delete user
+  description: Delete User in bd
+  operationId: deleteUser
+  parameters:
+    - name: id
+      in: path
+      description: 'The id that needs to be fetched. Use 123 for example. '
+      required: true
+      schema:
+        type: string
+      example: 65787beb3b8aa13a463cf7af
+  responses:
+    200:
+      description: Success
+      content:
+        application/json: { }
+    500:
+      description: Something went wrong
+      content:
+        application/json: { }
+get:
+    tags:
+      - user
+    summary: Get user
+    description: Get User in bd
+    operationId: getUser
+    parameters:
+      - name: id
+        in: path
+        description: 'The id that needs to be fetched. Use 123 for example. '
+        required: true
+        schema:
+          type: string
+        example: 65787beb3b8aa13a463cf7af
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/user/UserRs.yml'
+      500:
+        description: Something went wrong
+        content:
+          application/json: { }

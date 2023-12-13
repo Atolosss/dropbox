@@ -1,0 +1,49 @@
+post:
+  tags:
+    - userFile
+  summary: Create userFile
+  description: Create userFile in bd
+  operationId: createUserFile
+  requestBody:
+    description: Created userFile object
+    content:
+      '*/*':
+        schema:
+          $ref: '../schemas/user/UserFileUploadRq.yml'
+    required: true
+  responses:
+    200:
+      description: Success
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/user/UserFileRs.yml'
+    400:
+      description: There is already a user with this email
+      content:
+        application/json: { }
+get:
+  tags:
+    - userFile
+  summary: Get all userFile
+  description: Get all userFile in bd
+  operationId: getAllUserFile
+  parameters:
+    - name: id_user
+      in: path
+      description: 'The id that needs to be fetched. Use 123 for example. '
+      required: true
+      schema:
+        type: string
+      example: 65787beb3b8aa13a463cf7af
+  responses:
+    200:
+      description: Success
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/user/UserFileRsList.yml'
+    500:
+      description: Something went wrong
+      content:
+        application/json: { }

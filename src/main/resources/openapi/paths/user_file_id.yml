@@ -1,0 +1,48 @@
+delete:
+  tags:
+    - userFile
+  summary: Delete userFile
+  description: Delete UserFile in bd
+  operationId: deleteUserFile
+  parameters:
+    - name: id
+      in: path
+      description: 'The id that needs to be fetched. Use 123 for example. '
+      required: true
+      schema:
+        type: string
+      example: 65787beb3b8aa13a463cf7af
+  responses:
+    200:
+      description: Success
+      content:
+        application/json: { }
+    500:
+      description: Something went wrong
+      content:
+        application/json: { }
+get:
+  tags:
+    - userFile
+  summary: Get userFile
+  description: Get userFile in bd
+  operationId: getUserFile
+  parameters:
+    - name: id
+      in: path
+      description: 'The id that needs to be fetched. Use 123 for example. '
+      required: true
+      schema:
+        type: string
+      example: 65787beb3b8aa13a463cf7af
+  responses:
+    200:
+      description: Success
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/user/UserFileRs.yml'
+    500:
+      description: Something went wrong
+      content:
+        application/json: { }

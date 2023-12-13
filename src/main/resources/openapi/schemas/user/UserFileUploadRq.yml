@@ -1,0 +1,12 @@
+type: object
+required:
+  - name
+  - user
+properties:
+  name:
+    type: string
+    example: exampleFile
+  user:
+    type: string
+    example: userId
+

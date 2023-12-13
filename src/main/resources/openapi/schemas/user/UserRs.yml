@@ -1,0 +1,21 @@
+type: object
+properties:
+  id:
+    type: string
+    example: 123
+  email:
+    type: string
+    example: example@mail.ru
+  firstName:
+    type: string
+    example: masha
+  lastName:
+    type: string
+    example: ivanov
+  dateOfBirth:
+    type: string
+    example: 16.05.1995
+  files:
+      type: array
+      items:
+        $ref: "../user/UserFileRs.yml"

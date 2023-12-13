@@ -1,10 +1,11 @@
 type: object
 required:
   - email
+  - password
 properties:
   email:
     type: string
     example: example@mail.ru
   password:
     type: string
-    example: qwerty123
+    example: 123
