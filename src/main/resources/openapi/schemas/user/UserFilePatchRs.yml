@@ -1,0 +1,11 @@
+type: object
+properties:
+  id:
+    type: string
+    example: 123
+  name:
+    type: string
+    example: pdf
+  url:
+    type: string
+    example: localhost:8080/v2

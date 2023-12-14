@@ -7,6 +7,8 @@ import com.dropbox.repository.UserFileRepository;
 import com.dropbox.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.gmm.demo.model.api.UserFilePatchRq;
+import ru.gmm.demo.model.api.UserFilePatchRs;
 import ru.gmm.demo.model.api.UserFileRs;
 import ru.gmm.demo.model.api.UserFileUploadRq;
 
@@ -19,11 +21,6 @@ public class UserFileService {
     private final UserFileRepository userFileRepository;
     private final UserFileMapper userFileMapper;
     private final UserRepository userRepository;
-
-    public List<UserFileRs> getAllUserFile(final String idUser) {
-        final List<UserFile> userFiles = userRepository.findById(idUser).get().getFiles();
-        return userFileMapper.toUserFileRsList(userFiles);
-    }
 
     public UserFileRs createUserFile(final UserFileUploadRq userFileUploadRq) {
         final User user = userRepository.findById(userFileUploadRq.getUser()).orElseThrow();
@@ -44,5 +41,17 @@ public class UserFileService {
     public void deleteUserFile(final String id) {
         userFileRepository.findById(id).orElseThrow();
         userFileRepository.deleteById(id);
+    }
+
+    public List<UserFileRs> getAllUserFile(final String id) {
+        final List<UserFile> userFilesList = userRepository.findById(id).get().getFiles();
+        return userFileMapper.toUserFileRsList(userFilesList);
+    }
+
+    public UserFilePatchRs patchUserFile(final String id, final UserFilePatchRq userFilePatchRq) {
+        final UserFile userFile = userFileRepository.findById(id).orElseThrow();
+        userFileMapper.update(userFile, userFilePatchRq);
+        final UserFile saved = userFileRepository.save(userFile);
+        return userFileMapper.toUserFilePatchRs(saved);
     }
 }

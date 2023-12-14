@@ -1,0 +1,9 @@
+type: object
+properties:
+  name:
+    type: string
+    example: pdf
+  url:
+    type: string
+    example: localhost:8080/v2
+

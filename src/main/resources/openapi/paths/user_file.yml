@@ -1,28 +1,3 @@
-get:
-  tags:
-    - userFile
-  summary: Get all userFile
-  description: Get all userFile in bd
-  operationId: getAllUserFile
-  parameters:
-    - name: id
-      in: path
-      description: 'The user id that needs to be fetched. Use 123 for example. '
-      required: true
-      schema:
-        type: string
-      example: 65787beb3b8aa13a463cf7af
-  responses:
-    200:
-      description: Success
-      content:
-        application/json:
-          schema:
-            $ref: '../schemas/user/UserFileRsList.yml'
-    500:
-      description: Something went wrong
-      content:
-        application/json: { }
 post:
   tags:
     - userFile
@@ -43,6 +18,31 @@ post:
         application/json:
           schema:
             $ref: '../schemas/user/UserFileRs.yml'
+    500:
+      description: Something went wrong
+      content:
+        application/json: { }
+get:
+  tags:
+    - userFile
+  summary: Get all userFile
+  description: Get all userFile for User in bd
+  operationId: getAllUserFile
+  parameters:
+    - name: id
+      in: path
+      description: 'The user id that needs to be fetched. Use 123 for example. '
+      required: true
+      schema:
+        type: string
+      example: 65787beb3b8aa13a463cf7af
+  responses:
+    200:
+      description: Success
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/user/UserFileRsList.yml'
     500:
       description: Something went wrong
       content:
