@@ -136,7 +136,7 @@ buildNumber.properties
 allure-results
 
 application.yml
-!src/main/resources/application.yml
+!src/main/resources/application-dev.yml
 /config/
 /key/
 /sec/
