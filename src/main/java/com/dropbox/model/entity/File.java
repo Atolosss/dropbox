@@ -14,12 +14,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Builder
 
 @Document
-public class UserFile {
+public class File {
     @Id
     private String id;
     private String name;
     private FileType fileType;
     private String url;
-    private User user;
+    private String userId;
 
 }

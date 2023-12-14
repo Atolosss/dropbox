@@ -1,0 +1,24 @@
+get:
+  tags:
+    - user
+  summary: Get user files
+  operationId: getUserFiles
+  parameters:
+    - name: userId
+      in: path
+      description: 'User id'
+      required: true
+      schema:
+        type: string
+      example: 65787beb3b8aa13a463cf7af
+  responses:
+    200:
+      description: Success
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/user/FileRsList.yml'
+    404:
+      description: User not found exception
+      content:
+        application/json: { }

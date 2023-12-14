@@ -1,0 +1,24 @@
+post:
+  tags:
+    - file
+  summary: create file
+  description: create userFile in bd
+  operationId: createFile
+  requestBody:
+    description: Created file
+    content:
+      '*/*':
+        schema:
+          $ref: '../schemas/user/FileUploadRq.yml'
+    required: true
+  responses:
+    200:
+      description: Success
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/user/FileRs.yml'
+    404:
+      description: User not found exception
+      content:
+        application/json: { }

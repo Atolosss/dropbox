@@ -1,9 +1,55 @@
+get:
+  tags:
+    - file
+  summary: Get file
+  description: Get file in bd
+  operationId: getFile
+  parameters:
+    - name: id
+      in: path
+      description: 'The id that needs to be fetched. Use 123 for example. '
+      required: true
+      schema:
+        type: string
+      example: 65787beb3b8aa13a463cf7af
+  responses:
+    200:
+      description: Success
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/user/FileRs.yml'
+    404:
+      description: File not found
+      content:
+        application/json: { }
+
+delete:
+  tags:
+    - file
+  summary: Delete file
+  description: Delete File in bd
+  operationId: deleteFile
+  parameters:
+    - name: id
+      in: path
+      description: 'The id that needs to be fetched. Use 123 for example. '
+      required: true
+      schema:
+        type: string
+      example: 65787beb3b8aa13a463cf7af
+  responses:
+    200:
+      description: Success
+      content:
+        application/json: { }
+
 patch:
   tags:
-    - userFile
-  summary: Patch userFile
-  description: Patch userFile in bd
-  operationId: patchUserFile
+    - file
+  summary: Patch file
+  description: Patch file in bd
+  operationId: patchFile
   parameters:
     - name: id
       in: path
@@ -17,7 +63,7 @@ patch:
     content:
       '*/*':
         schema:
-          $ref: '../schemas/user/UserFilePatchRq.yml'
+          $ref: '../schemas/user/FilePatchRq.yml'
     required: true
   responses:
     200:
@@ -25,55 +71,7 @@ patch:
       content:
         application/json:
           schema:
-            $ref: '../schemas/user/UserFilePatchRs.yml'
-    500:
-      description: Something went wrong
-      content:
-        application/json: { }
-delete:
-  tags:
-    - userFile
-  summary: Delete userFile
-  description: Delete UserFile in bd
-  operationId: deleteUserFile
-  parameters:
-    - name: id
-      in: path
-      description: 'The id that needs to be fetched. Use 123 for example. '
-      required: true
-      schema:
-        type: string
-      example: 65787beb3b8aa13a463cf7af
-  responses:
-    200:
-      description: Success
-      content:
-        application/json: { }
-    500:
-      description: Something went wrong
-      content:
-        application/json: { }
-get:
-  tags:
-    - userFile
-  summary: Get userFile
-  description: Get userFile in bd
-  operationId: getUserFile
-  parameters:
-    - name: id
-      in: path
-      description: 'The id that needs to be fetched. Use 123 for example. '
-      required: true
-      schema:
-        type: string
-      example: 65787beb3b8aa13a463cf7af
-  responses:
-    200:
-      description: Success
-      content:
-        application/json:
-          schema:
-            $ref: '../schemas/user/UserFileRs.yml'
+            $ref: '../schemas/user/FileRs.yml'
     500:
       description: Something went wrong
       content:

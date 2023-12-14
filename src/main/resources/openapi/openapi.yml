@@ -1,36 +1,35 @@
 openapi: "3.0.0"
 info:
-  title: user app
-  description: "user app description"
+  title: dropbox
+  description: "drop description"
   termsOfService: https://editor.swagger.io/ or https://editor-next.swagger.io/
-  contact:
-    email: example@gmail.com
-    url: https://swagger.io/specification/
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   version: 0.0.1-SNAPSHOT
-externalDocs:
-  description: Find out more about swagger
-  url: https://swagger.io/specification/
 servers:
   - url: http://localhost:8080
 tags:
   - name: user
     description: Operations about user
     externalDocs:
-      description: Find out more about our store
       url: https://editor-next.swagger.io/
-components:
-  schemas:
-    UserRegistrationRq: { $ref: "./schemas/user/UserRegistrationRq.yml" }
-    UserFileUploadRq: { $ref: "./schemas/user/UserFileUploadRq.yml"}
+  - name: file
+    description: Operations about file
+    externalDocs:
+      url: https://editor-next.swagger.io/
+#components:
+#  schemas:
+#    UserRegistrationRq: { $ref: "./schemas/user/UserRegistrationRq.yml" }
+#    UserFileUploadRq: { $ref: "./schemas/user/FileUploadRq.yml" }
 paths:
   /api/v1/users:
     $ref: "./paths/user.yml"
   /api/v1/users/{id}:
     $ref: "./paths/user_id.yml"
-  /api/v1/userfiles:
-    $ref: "./paths/user_file.yml"
-  /api/v1/userfiles/{id}:
-    $ref: "./paths/user_file_id.yml"
+  /api/v1/users/{id}/files:
+    $ref: "./paths/user_id_file.yml"
+  /api/v1/files:
+    $ref: "./paths/file.yml"
+  /api/v1/files/{id}:
+    $ref: "./paths/file_id.yml"

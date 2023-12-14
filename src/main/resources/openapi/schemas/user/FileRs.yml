@@ -1,0 +1,15 @@
+type: object
+properties:
+  id:
+    type: string
+    example: 123
+  name:
+    type: string
+    example: file.txt
+  url:
+    type: string
+    example: s3://bucket/file.txt
+  type:
+    type: string
+    "enum": [ "PDF", "DOC", "XLSX" ]
+    example: s3://bucket/file.txt

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -31,6 +32,7 @@ public class User {
     private LocalDateTime createDateTime;
     private LocalDateTime updateDateTime;
     @Builder.Default
-    private List<UserFile> files = new ArrayList<>();
+    @ToString.Exclude
+    private List<File> files = new ArrayList<>();
 
 }
