@@ -30,8 +30,9 @@ public class UserFileService {
         final List<UserFile> userFiles = user.getFiles();
         userFiles.add(userFileMapper.toUserFile(userFileUploadRq));
         user.setFiles(userFiles);
+        final UserFile insert = userFileRepository.save(userFileMapper.toUserFile(userFileUploadRq));
         userRepository.save(user);
-        return userFileMapper.toUserFileRs(userFileMapper.toUserFile(userFileUploadRq));
+        return userFileMapper.toUserFileRs(insert);
     }
 
     public UserFileRs getUserFile(final String id) {
