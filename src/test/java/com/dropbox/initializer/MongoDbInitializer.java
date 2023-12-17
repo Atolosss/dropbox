@@ -1,4 +1,4 @@
-package com.dropbox.support;
+package com.dropbox.initializer;
 
 import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.ApplicationContextInitializer;
@@ -14,10 +14,11 @@ public class MongoDbInitializer implements ApplicationContextInitializer<Configu
     @Container
     private static final MongoDBContainer MONGO_DB_CONTAINER =
         new MongoDBContainer(IMAGE)
-            .withExposedPorts(27017);
+            .withExposedPorts(27017)
+            .withEnv("MONGO_INITDB_DATABASE", "test");
 
     @Override
-    public void initialize(ConfigurableApplicationContext applicationContext) {
+    public void initialize(final ConfigurableApplicationContext applicationContext) {
         MONGO_DB_CONTAINER
             .start();
 

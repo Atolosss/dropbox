@@ -4,7 +4,7 @@ get:
   summary: Get user files
   operationId: getUserFiles
   parameters:
-    - name: userId
+    - name: id
       in: path
       description: 'User id'
       required: true
