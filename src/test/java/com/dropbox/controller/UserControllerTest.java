@@ -20,11 +20,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Testcontainers
 class UserControllerTest extends IntegrationTestBase {
 
+    public static final String API = "api";
+    public static final String V_1 = "v1";
+    public static final String USERS = "users";
+    public static final String FILES = "files";
+
     @Test
     void postUserShouldWork() {
-        UserRegistrationRq userRegistrationRq = DataProvider.prepareUserRegistrationRq().build();
+        final UserRegistrationRq userRegistrationRq = DataProvider.prepareUserRegistrationRq().build();
 
-        UserRegistrationRs userRegistrationRs = postUser(userRegistrationRq, 200);
+        final UserRegistrationRs userRegistrationRs = postUser(userRegistrationRq, 200);
         assertThat(userRegistrationRs).isNotNull();
         assertThat(userRepository.findUserByEmail(userRegistrationRq.getEmail())).isNotEmpty();
     }
@@ -36,17 +41,29 @@ class UserControllerTest extends IntegrationTestBase {
 
         assertThat(getAllUsers())
             .usingRecursiveComparison()
-            .ignoringFields("lastName", "firstName", "dateOfBirth", "files")
+            .ignoringFields("lastName", "firstName", "dateOfBirth", FILES)
             .isEqualTo(List.of(UserRs.builder()
                 .id(user.getId())
                 .email(user.getEmail())
                 .build()));
     }
 
+    @Test
+    void getUserFilesShouldWork() {
+        createUserAndFile();
+        final User user = userRepository.findAll().stream()
+            .findFirst().orElseThrow();
+        assertThat(getUserFiles(user.getId()))
+            .usingRecursiveComparison()
+            .ignoringFields("id", "fileType", "url", "userId")
+            .isEqualTo(List.of(FileRs.builder()
+                .name("How make doc")));
+    }
+
     private List<FileRs> getUserFiles(final String id) {
         return webTestClient.get()
             .uri(uriBuilder -> uriBuilder
-                .pathSegment("api", "v1", "users", id, "files")
+                .pathSegment(API, V_1, USERS, id, FILES)
                 .build())
             .exchange()
             .expectStatus().isEqualTo(200)
@@ -59,7 +76,7 @@ class UserControllerTest extends IntegrationTestBase {
     private List<UserRs> getAllUsers() {
         return webTestClient.get()
             .uri(uriBuilder -> uriBuilder
-                .pathSegment("api", "v1", "users")
+                .pathSegment(API, V_1, USERS)
                 .build())
             .exchange()
             .expectStatus().isEqualTo(200)
@@ -109,7 +126,7 @@ class UserControllerTest extends IntegrationTestBase {
 
         assertThat(getUser(user.getId()))
             .usingRecursiveComparison()
-            .ignoringFields("lastName", "firstName", "dateOfBirth", "files")
+            .ignoringFields("lastName", "firstName", "dateOfBirth", FILES)
             .isEqualTo(UserRs.builder()
                 .id(user.getId())
                 .email(user.getEmail())
@@ -119,7 +136,7 @@ class UserControllerTest extends IntegrationTestBase {
     private UserRs getUser(final String id) {
         return webTestClient.get()
             .uri(uriBuilder -> uriBuilder
-                .pathSegment("api", "v1", "users", id)
+                .pathSegment(API, V_1, USERS, id)
                 .build())
             .exchange()
             .expectStatus().isEqualTo(200)
@@ -131,7 +148,7 @@ class UserControllerTest extends IntegrationTestBase {
     private void deleteUser(final String id) {
         webTestClient.delete()
             .uri(uriBuilder -> uriBuilder
-                .pathSegment("api", "v1", "users", id)
+                .pathSegment(API, V_1, USERS, id)
                 .build())
             .exchange()
             .expectStatus().isEqualTo(200);
@@ -140,7 +157,7 @@ class UserControllerTest extends IntegrationTestBase {
     private UserRegistrationRs postUser(final UserRegistrationRq request, final int status) {
         return webTestClient.post()
             .uri(uriBuilder -> uriBuilder
-                .pathSegment("api", "v1", "users")
+                .pathSegment(API, V_1, USERS)
                 .build())
             .bodyValue(request)
             .exchange()
@@ -153,7 +170,7 @@ class UserControllerTest extends IntegrationTestBase {
     private UserPatchRs patchUser(final UserPatchRq request, final String id) {
         return webTestClient.patch()
             .uri(uriBuilder -> uriBuilder
-                .pathSegment("api", "v1", "users", id)
+                .pathSegment(API, V_1, USERS, id)
                 .build())
             .bodyValue(request)
             .exchange()

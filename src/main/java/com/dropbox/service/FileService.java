@@ -2,6 +2,7 @@ package com.dropbox.service;
 
 import com.dropbox.mapper.FileMapper;
 import com.dropbox.model.entity.File;
+import com.dropbox.model.entity.User;
 import com.dropbox.repository.FileRepository;
 import com.dropbox.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -52,9 +53,7 @@ public class FileService {
     }
 
     public List<FileRs> getUserFiles(final String id) {
-        return fileRepository.findAllByUserId(id)
-            .stream()
-            .map(fileMapper::toFileRs)
-            .toList();
+        final User user = userRepository.findById(id).orElseThrow();
+        return user.getFiles().stream().map(fileMapper::toFileRs).toList();
     }
 }

@@ -1,5 +1,6 @@
 package com.dropbox.support;
 
+import com.dropbox.initializer.MongoDbInitializer;
 import com.dropbox.model.entity.File;
 import com.dropbox.model.entity.User;
 import com.dropbox.repository.FileRepository;
@@ -7,14 +8,18 @@ import com.dropbox.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.List;
 
-public class IntegrationTestBase extends MongoDatabaseAwareTestBase {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ContextConfiguration(initializers = MongoDbInitializer.class)
+@ActiveProfiles("test")
+public class IntegrationTestBase {
     @LocalServerPort
     protected int localPort;
     @Autowired
@@ -37,19 +42,6 @@ public class IntegrationTestBase extends MongoDatabaseAwareTestBase {
         fileRepository.deleteAll();
     }
 
-    @Override
-    protected Map<String, String> getCollectionsName() {
-        Map<String, String> collections = new HashMap<>();
-        collections.put("users", "test");
-        collections.put("files", "test");
-        return collections;
-    }
-
-    @Override
-    protected Set<String> getCollections() {
-        return Set.of("users", "files");
-    }
-
     protected void createUser(final User user) {
         userRepository.save(user);
     }
@@ -62,7 +54,9 @@ public class IntegrationTestBase extends MongoDatabaseAwareTestBase {
         final User user = DataProvider.prepareUser().build();
         final File file = DataProvider.prepareFile().build();
         file.setUserId(user.getId());
+        user.setFiles(List.of(file));
         createUser(user);
         createFile(file);
+
     }
 }
