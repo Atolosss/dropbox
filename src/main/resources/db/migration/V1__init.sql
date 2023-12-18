@@ -1,10 +1,10 @@
 CREATE TABLE IF NOT EXISTS user
 (
-    id               bigserial,
-    email             varchar(100) NOT NULL,
-    fisrt_name     varchar(255)
+    id             bigserial,
+    email          varchar(100) NOT NULL,
+    first_name     varchar(255),
     last_name      varchar(255),
-    password      varchar(255),
+    password       varchar(255),
     date_of_birth date,
     create_date_time timestamp NOT NULL,
     update_date_time timestamp,
@@ -25,11 +25,11 @@ CREATE TABLE IF NOT EXISTS file
 (
     id               bigserial,
     name            varchar(255) NOT NULL,
-    create_date_time timestamp    NOT NULL,
+    create_date_time timestamp   NOT NULL,
     update_date_time timestamp,
     user_id          bigint,
-    constraint comment_pk primary key (id),
-    constraint comment_user_id_fk foreign key (user_id) references user (id)
+    constraint file_pk primary key (id),
+    constraint file_user_id_fk foreign key (user_id) references user (id)
 );
 
 file on table file is 'Таблица файлов';

@@ -4,6 +4,8 @@ import com.dropbox.model.entity.File;
 import com.dropbox.model.entity.User;
 import com.dropbox.repository.FileRepository;
 import com.dropbox.repository.UserRepository;
+import com.dropbox.service.FileService;
+import com.dropbox.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -21,6 +23,10 @@ public class IntegrationTestBase extends DatabaseAwareTestBase {
     protected UserRepository userRepository;
     @Autowired
     protected FileRepository fileRepository;
+    @Autowired
+    protected FileService fileService;
+    @Autowired
+    protected UserService userService;
 
     @BeforeEach
     void beforeEach() {
@@ -50,7 +56,7 @@ public class IntegrationTestBase extends DatabaseAwareTestBase {
     protected void createUserAndFile() {
         final User user = DataProvider.prepareUser().build();
         final File file = DataProvider.prepareFile().build();
-        file.setUserId(user.getId());
+        file.setUserId(file.getUserId());
         user.setFiles(List.of(file));
         createUser(user);
         createFile(file);

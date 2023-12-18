@@ -8,4 +8,5 @@ properties:
     example: example@mail.ru
   id:
     type: integer
+    format: int64
     example: 550

@@ -21,7 +21,7 @@ public class FileControllerTest extends IntegrationTestBase {
     void filePostShouldWork() {
         final User user = DataProvider.prepareUser().build();
         createUser(user);
-        final FileUploadRq fileUploadRq = DataProvider.prepareFileUploadRq(String.valueOf(userRepository.findUserByEmail("email").orElseThrow().getId())).build();
+        final FileUploadRq fileUploadRq = DataProvider.prepareFileUploadRq(userRepository.findUserByEmail("email").orElseThrow().getId()).build();
 
         assertThat(postFile(fileUploadRq)).isNotNull();
         assertThat(fileRepository.findAll().stream().findFirst().orElseThrow())
