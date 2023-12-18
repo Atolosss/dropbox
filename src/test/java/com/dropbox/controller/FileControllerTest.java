@@ -5,14 +5,12 @@ import com.dropbox.model.entity.User;
 import com.dropbox.support.DataProvider;
 import com.dropbox.support.IntegrationTestBase;
 import org.junit.jupiter.api.Test;
-import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.gmm.demo.model.api.FilePatchRq;
 import ru.gmm.demo.model.api.FileRs;
 import ru.gmm.demo.model.api.FileUploadRq;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Testcontainers
 public class FileControllerTest extends IntegrationTestBase {
 
     public static final String API = "api";
@@ -23,7 +21,7 @@ public class FileControllerTest extends IntegrationTestBase {
     void filePostShouldWork() {
         final User user = DataProvider.prepareUser().build();
         createUser(user);
-        final FileUploadRq fileUploadRq = DataProvider.prepareFileUploadRq(userRepository.findUserByEmail("email").get().getId()).build();
+        final FileUploadRq fileUploadRq = DataProvider.prepareFileUploadRq(String.valueOf(userRepository.findUserByEmail("email").orElseThrow().getId())).build();
 
         assertThat(postFile(fileUploadRq)).isNotNull();
         assertThat(fileRepository.findAll().stream().findFirst().orElseThrow())
@@ -58,10 +56,10 @@ public class FileControllerTest extends IntegrationTestBase {
                 .name(file.getName()));
     }
 
-    private FileRs getFileByUserId(final String id) {
+    private FileRs getFileByUserId(final Long id) {
         return webTestClient.get()
             .uri(uriBuilder -> uriBuilder
-                .pathSegment(API, V_1, FILES, id)
+                .pathSegment(API, V_1, FILES, String.valueOf(id))
                 .build())
             .exchange()
             .expectStatus().isEqualTo(200)
@@ -80,10 +78,10 @@ public class FileControllerTest extends IntegrationTestBase {
         assertThat(fileRepository.findById(file.getId())).isEmpty();
     }
 
-    private void deleteFileById(final String id) {
+    private void deleteFileById(final Long id) {
         webTestClient.delete()
             .uri(uriBuilder -> uriBuilder
-                .pathSegment(API, V_1, FILES, id)
+                .pathSegment(API, V_1, FILES, String.valueOf(id))
                 .build())
             .exchange()
             .expectStatus().isEqualTo(200);
@@ -104,10 +102,10 @@ public class FileControllerTest extends IntegrationTestBase {
                 .url(filePatchRq.getUrl()));
     }
 
-    private FileRs patchFile(final String id, final FilePatchRq request) {
+    private FileRs patchFile(final Long id, final FilePatchRq request) {
         return webTestClient.patch()
             .uri(uriBuilder -> uriBuilder
-                .pathSegment(API, V_1, FILES, id)
+                .pathSegment(API, V_1, FILES, String.valueOf(id))
                 .build())
             .bodyValue(request)
             .exchange()

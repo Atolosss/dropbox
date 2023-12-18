@@ -1,25 +1,18 @@
 package com.dropbox.support;
 
-import com.dropbox.initializer.MongoDbInitializer;
 import com.dropbox.model.entity.File;
 import com.dropbox.model.entity.User;
 import com.dropbox.repository.FileRepository;
 import com.dropbox.repository.UserRepository;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import java.util.List;
+import java.util.Set;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ContextConfiguration(initializers = MongoDbInitializer.class)
-@ActiveProfiles("test")
-public class IntegrationTestBase {
+public class IntegrationTestBase extends DatabaseAwareTestBase {
     @LocalServerPort
     protected int localPort;
     @Autowired
@@ -36,10 +29,14 @@ public class IntegrationTestBase {
             .build();
     }
 
-    @AfterEach
-    void afterEach() {
-        userRepository.deleteAll();
-        fileRepository.deleteAll();
+    @Override
+    protected String getSchema() {
+        return "public";
+    }
+
+    @Override
+    protected Set<String> getTables() {
+        return Set.of("file", "user");
     }
 
     protected void createUser(final User user) {

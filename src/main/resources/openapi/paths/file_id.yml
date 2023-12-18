@@ -10,8 +10,8 @@ get:
       description: 'The id that needs to be fetched. Use 123 for example. '
       required: true
       schema:
-        type: string
-      example: 65787beb3b8aa13a463cf7af
+        type: integer
+      example: 65787
   responses:
     200:
       description: Success
