@@ -42,7 +42,7 @@ public class IntegrationTestBase extends DatabaseAwareTestBase {
 
     @Override
     protected Set<String> getTables() {
-        return Set.of("file", "user");
+        return Set.of("file", "users");
     }
 
     protected void createUser(final User user) {
@@ -56,7 +56,7 @@ public class IntegrationTestBase extends DatabaseAwareTestBase {
     protected void createUserAndFile() {
         final User user = DataProvider.prepareUser().build();
         final File file = DataProvider.prepareFile().build();
-        file.setUserId(file.getUserId());
+        file.setUser(user);
         user.setFiles(List.of(file));
         createUser(user);
         createFile(file);

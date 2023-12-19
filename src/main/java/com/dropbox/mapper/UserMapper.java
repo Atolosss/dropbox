@@ -17,33 +17,40 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-@Mapper(config = MapperConfiguration.class)
+@Mapper(config = MapperConfiguration.class,
+    uses = FileMapper.class)
 public interface UserMapper {
 
     DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+    String EMAIL = "email";
+    String PASSWORD = "password";
+    String ID = "id";
+    String NAME = "firstName";
+    String NAME1 = "lastName";
+    String DATE_OF_BIRTH = "dateOfBirth";
 
     @BeanMapping(ignoreByDefault = true)
-    @Mapping(target = "email", source = "email")
-    @Mapping(target = "password", source = "password")
+    @Mapping(target = EMAIL, source = EMAIL)
+    @Mapping(target = PASSWORD, source = PASSWORD)
     User toUser(UserRegistrationRq userRegistrationRq);
 
     @BeanMapping(ignoreByDefault = true)
-    @Mapping(target = "email", source = "email")
-    @Mapping(target = "id", source = "id")
+    @Mapping(target = EMAIL, source = EMAIL)
+    @Mapping(target = ID, source = ID)
     UserRegistrationRs toUserRegistrationRs(User inserted);
 
     @BeanMapping(ignoreByDefault = true, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mapping(target = "firstName", source = "firstName")
-    @Mapping(target = "lastName", source = "lastName")
-    @Mapping(target = "dateOfBirth", source = "dateOfBirth", qualifiedByName = "mapDateOfBirth")
+    @Mapping(target = NAME, source = NAME)
+    @Mapping(target = NAME1, source = NAME1)
+    @Mapping(target = DATE_OF_BIRTH, source = DATE_OF_BIRTH, qualifiedByName = "mapDateOfBirth")
     void update(@MappingTarget User user, UserPatchRq userPatchRq);
 
     @BeanMapping(ignoreByDefault = true)
-    @Mapping(target = "id", source = "id")
-    @Mapping(target = "email", source = "email")
-    @Mapping(target = "firstName", source = "firstName")
-    @Mapping(target = "lastName", source = "lastName")
-    @Mapping(target = "dateOfBirth", source = "dateOfBirth")
+    @Mapping(target = ID, source = ID)
+    @Mapping(target = EMAIL, source = EMAIL)
+    @Mapping(target = NAME, source = NAME)
+    @Mapping(target = NAME1, source = NAME1)
+    @Mapping(target = DATE_OF_BIRTH, source = DATE_OF_BIRTH)
     UserPatchRs toUserPatchRs(User saved);
 
     @Named("mapDateOfBirth")
@@ -55,10 +62,10 @@ public interface UserMapper {
     List<UserRs> toUserRsList(List<User> users);
 
     @BeanMapping(ignoreByDefault = true)
-    @Mapping(target = "id", source = "id")
-    @Mapping(target = "email", source = "email")
-    @Mapping(target = "firstName", source = "firstName")
-    @Mapping(target = "lastName", source = "lastName")
-    @Mapping(target = "dateOfBirth", source = "dateOfBirth")
+    @Mapping(target = ID, source = ID)
+    @Mapping(target = EMAIL, source = EMAIL)
+    @Mapping(target = NAME, source = NAME)
+    @Mapping(target = NAME1, source = NAME1)
+    @Mapping(target = DATE_OF_BIRTH, source = DATE_OF_BIRTH)
     UserRs toUserRs(User user);
 }

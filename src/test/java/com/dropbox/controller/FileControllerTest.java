@@ -11,7 +11,7 @@ import ru.gmm.demo.model.api.FileUploadRq;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class FileControllerTest extends IntegrationTestBase {
+class FileControllerTest extends IntegrationTestBase {
 
     public static final String API = "api";
     public static final String V_1 = "v1";
@@ -24,11 +24,11 @@ public class FileControllerTest extends IntegrationTestBase {
         final FileUploadRq fileUploadRq = DataProvider.prepareFileUploadRq(userRepository.findUserByEmail("email").orElseThrow().getId()).build();
 
         assertThat(postFile(fileUploadRq)).isNotNull();
-        assertThat(fileRepository.findAll().stream().findFirst().orElseThrow())
+        executeInTransaction(() -> assertThat(fileRepository.findAll().stream().findFirst().orElseThrow())
             .usingRecursiveComparison()
-            .ignoringFields("id", "fileType", "url", "userId")
+            .ignoringFields("id", "fileType", "url", "user")
             .isEqualTo(File.builder()
-                .name(fileUploadRq.getName()));
+                .name(fileUploadRq.getName())));
     }
 
     private FileRs postFile(final FileUploadRq request) {

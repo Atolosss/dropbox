@@ -27,8 +27,7 @@ public class UserService {
             throw new ServiceException(ErrorCode.ERR_CODE_001, userRegistrationRq.getEmail());
         }
 
-        final User user = userMapper.toUser(userRegistrationRq);
-        final User inserted = userRepository.save(user);
+        final User inserted = userRepository.save(userMapper.toUser(userRegistrationRq));
         return userMapper.toUserRegistrationRs(inserted);
     }
 
