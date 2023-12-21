@@ -10,8 +10,9 @@ patch:
       description: 'The id that needs to be fetched. Use 123 for example. '
       required: true
       schema:
-        type: string
-      example: 65787beb3b8aa13a463cf7af
+        type: integer
+        format: int64
+      example: 657
   requestBody:
     description: Patch user object
     content:
@@ -42,8 +43,9 @@ delete:
       description: 'The id that needs to be fetched. Use 123 for example. '
       required: true
       schema:
-        type: string
-      example: 65787beb3b8aa13a463cf7af
+        type: integer
+        format: int64
+      example: 6578
   responses:
     200:
       description: Success
@@ -65,8 +67,9 @@ get:
       description: 'The id that needs to be fetched. Use 123 for example. '
       required: true
       schema:
-        type: string
-      example: 65787beb3b8aa13a463cf7af
+        type: integer
+        format: int64
+      example: 65787
   responses:
     200:
       description: Success

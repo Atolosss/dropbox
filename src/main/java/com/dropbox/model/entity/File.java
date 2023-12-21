@@ -1,25 +1,38 @@
 package com.dropbox.model.entity;
 
 import com.dropbox.model.enums.FileType;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@SuperBuilder
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode(callSuper = true)
 
-@Document
-public class File {
-    @Id
-    private String id;
+@Entity
+@Table(name = "file")
+public class File extends BaseEntity {
     private String name;
     private FileType fileType;
     private String url;
-    private String userId;
+    @ToString.Exclude
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_file_user"))
+    private User user;
 
 }

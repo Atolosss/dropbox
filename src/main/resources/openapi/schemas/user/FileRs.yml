@@ -1,7 +1,8 @@
 type: object
 properties:
   id:
-    type: string
+    type: integer
+    format: int64
     example: 123
   name:
     type: string

@@ -21,18 +21,18 @@ public class FileController implements FileApi {
     }
 
     @Override
-    public ResponseEntity<Void> deleteFile(final String id) {
+    public ResponseEntity<Void> deleteFile(final Long id) {
         fileService.deleteFile(id);
         return ResponseEntity.ok(null);
     }
 
     @Override
-    public ResponseEntity<FileRs> getFile(final String id) {
+    public ResponseEntity<FileRs> getFile(final Long id) {
         return ResponseEntity.ok(fileService.getFile(id));
     }
 
     @Override
-    public ResponseEntity<FileRs> patchFile(final String id, final FilePatchRq filePatchRq) {
+    public ResponseEntity<FileRs> patchFile(final Long id, final FilePatchRq filePatchRq) {
         return ResponseEntity.ok(fileService.patchFile(id, filePatchRq));
     }
 }
