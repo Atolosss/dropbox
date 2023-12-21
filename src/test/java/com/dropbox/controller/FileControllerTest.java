@@ -2,12 +2,12 @@ package com.dropbox.controller;
 
 import com.dropbox.model.entity.File;
 import com.dropbox.model.entity.User;
+import com.dropbox.model.openapi.FilePatchRq;
+import com.dropbox.model.openapi.FileRs;
+import com.dropbox.model.openapi.FileUploadRq;
 import com.dropbox.support.DataProvider;
 import com.dropbox.support.IntegrationTestBase;
 import org.junit.jupiter.api.Test;
-import ru.gmm.demo.model.api.FilePatchRq;
-import ru.gmm.demo.model.api.FileRs;
-import ru.gmm.demo.model.api.FileUploadRq;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -18,16 +18,22 @@ class FileControllerTest extends IntegrationTestBase {
     public static final String FILES = "files";
 
     @Test
-    void filePostShouldWork() {
+    void postFileShouldWork() {
         final User user = DataProvider.prepareUser().build();
         createUser(user);
-        final FileUploadRq fileUploadRq = DataProvider.prepareFileUploadRq(userRepository.findUserByEmail("email").orElseThrow().getId()).build();
 
-        assertThat(postFile(fileUploadRq)).isNotNull();
-        executeInTransaction(() -> assertThat(fileRepository.findAll().stream().findFirst().orElseThrow())
+        final FileUploadRq fileUploadRq = DataProvider.prepareFileUploadRq(user.getId()).build();
+
+        assertThat(postFile(fileUploadRq))
+            .isNotNull();
+
+        executeInTransaction(() -> assertThat(fileRepository.findAll())
+            .hasSize(1)
+            .first()
             .usingRecursiveComparison()
-            .ignoringFields("id", "fileType", "url", "user")
+            .ignoringFields("id", "fileType", "audit", "user")
             .isEqualTo(File.builder()
+                .key("123")
                 .name(fileUploadRq.getName())));
     }
 

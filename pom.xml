@@ -21,6 +21,7 @@
         <postgresql.version>1.19.1</postgresql.version>
         <springdoc-openapi-starter-webmvc-ui.version>2.2.0</springdoc-openapi-starter-webmvc-ui.version>
         <openapi-generator-maven-plugin.version>7.0.1</openapi-generator-maven-plugin.version>
+        <logbook-spring-boot-starter.version>3.6.0</logbook-spring-boot-starter.version>
     </properties>
 
     <dependencyManagement>
@@ -36,10 +37,10 @@
     </dependencyManagement>
 
     <dependencies>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.google.code.gson</groupId>-->
+<!--            <artifactId>gson</artifactId>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -61,6 +62,11 @@
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>${springdoc-openapi-starter-webmvc-ui.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.zalando</groupId>
+            <artifactId>logbook-spring-boot-starter</artifactId>
+            <version>${logbook-spring-boot-starter.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -137,6 +143,14 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>com/dropbox/controller/openapi/**</exclude>
+                        <exclude>com/dropbox/model/openapi/**</exclude>
+                        <exclude>com/dropbox/model/entity/**</exclude>
+                        <exclude>**/mapper/impl/**</exclude>
+                    </excludes>
+                </configuration>
                 <executions>
                     <execution>
                         <id>prepare-agent</id>
@@ -165,12 +179,12 @@
                                         <limit>
                                             <counter>INSTRUCTION</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.28</minimum>
+                                            <minimum>0.55</minimum>
                                         </limit>
                                         <limit>
                                             <counter>BRANCH</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.02</minimum>
+                                            <minimum>0.03</minimum>
                                         </limit>
                                         <limiуt>
                                             <counter>CLASS</counter>
@@ -180,7 +194,7 @@
                                         <limit>
                                             <counter>METHOD</counter>
                                             <value>MISSEDCOUNT</value>
-                                            <maximum>33</maximum>
+                                            <maximum>18</maximum>
                                         </limit>
                                     </limits>
                                 </rule>
@@ -203,8 +217,8 @@
                                 ${project.basedir}/src/main/resources/openapi/openapi.yml
                             </inputSpec>
                             <generatorName>spring</generatorName>
-                            <apiPackage>ru.gmm.demo.controller.api</apiPackage>
-                            <modelPackage>ru.gmm.demo.model.api</modelPackage>
+                            <apiPackage>com.dropbox.controller.openapi</apiPackage>
+                            <modelPackage>com.dropbox.model.openapi</modelPackage>
                             <supportingFilesToGenerate>
                                 ApiUtil.java
                             </supportingFilesToGenerate>

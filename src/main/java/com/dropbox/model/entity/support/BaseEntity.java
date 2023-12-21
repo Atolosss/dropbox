@@ -1,4 +1,4 @@
-package com.dropbox.model.entity;
+package com.dropbox.model.entity.support;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

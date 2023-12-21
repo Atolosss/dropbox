@@ -4,14 +4,14 @@ import com.dropbox.constant.ErrorCode;
 import com.dropbox.exceptions.ServiceException;
 import com.dropbox.mapper.UserMapper;
 import com.dropbox.model.entity.User;
+import com.dropbox.model.openapi.UserPatchRq;
+import com.dropbox.model.openapi.UserPatchRs;
+import com.dropbox.model.openapi.UserRegistrationRq;
+import com.dropbox.model.openapi.UserRegistrationRs;
+import com.dropbox.model.openapi.UserRs;
 import com.dropbox.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.gmm.demo.model.api.UserPatchRq;
-import ru.gmm.demo.model.api.UserPatchRs;
-import ru.gmm.demo.model.api.UserRegistrationRq;
-import ru.gmm.demo.model.api.UserRegistrationRs;
-import ru.gmm.demo.model.api.UserRs;
 
 import java.util.List;
 

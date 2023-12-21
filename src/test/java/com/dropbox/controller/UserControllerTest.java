@@ -1,16 +1,16 @@
 package com.dropbox.controller;
 
 import com.dropbox.model.entity.User;
+import com.dropbox.model.openapi.FileRs;
+import com.dropbox.model.openapi.UserPatchRq;
+import com.dropbox.model.openapi.UserPatchRs;
+import com.dropbox.model.openapi.UserRegistrationRq;
+import com.dropbox.model.openapi.UserRegistrationRs;
+import com.dropbox.model.openapi.UserRs;
 import com.dropbox.support.DataProvider;
 import com.dropbox.support.IntegrationTestBase;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.ParameterizedTypeReference;
-import ru.gmm.demo.model.api.FileRs;
-import ru.gmm.demo.model.api.UserPatchRq;
-import ru.gmm.demo.model.api.UserPatchRs;
-import ru.gmm.demo.model.api.UserRegistrationRq;
-import ru.gmm.demo.model.api.UserRegistrationRs;
-import ru.gmm.demo.model.api.UserRs;
 
 import java.util.List;
 

@@ -1,17 +1,17 @@
 package com.dropbox.controller;
 
+import com.dropbox.controller.openapi.UserApi;
+import com.dropbox.model.openapi.FileRs;
+import com.dropbox.model.openapi.UserPatchRq;
+import com.dropbox.model.openapi.UserPatchRs;
+import com.dropbox.model.openapi.UserRegistrationRq;
+import com.dropbox.model.openapi.UserRegistrationRs;
+import com.dropbox.model.openapi.UserRs;
 import com.dropbox.service.FileService;
 import com.dropbox.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import ru.gmm.demo.controller.api.UserApi;
-import ru.gmm.demo.model.api.FileRs;
-import ru.gmm.demo.model.api.UserPatchRq;
-import ru.gmm.demo.model.api.UserPatchRs;
-import ru.gmm.demo.model.api.UserRegistrationRq;
-import ru.gmm.demo.model.api.UserRegistrationRs;
-import ru.gmm.demo.model.api.UserRs;
 
 import java.util.List;
 

@@ -1,13 +1,17 @@
 type: object
 required:
   - name
-  - user_id
+  - userId
+  - fileDataBase64
 properties:
   name:
     type: string
     example: exampleFile
-  user_id:
+  userId:
     type: integer
     format: int64
     example: 550
+  fileData:
+    type: string
+    example: 0J7QsdGJ0LjQtSDQv9GA0LDQstC40LvQsDoKMS4g0JLQsNC70L
 

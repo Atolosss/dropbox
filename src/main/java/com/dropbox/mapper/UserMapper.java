@@ -1,17 +1,17 @@
 package com.dropbox.mapper;
 
 import com.dropbox.model.entity.User;
+import com.dropbox.model.openapi.UserPatchRq;
+import com.dropbox.model.openapi.UserPatchRs;
+import com.dropbox.model.openapi.UserRegistrationRq;
+import com.dropbox.model.openapi.UserRegistrationRs;
+import com.dropbox.model.openapi.UserRs;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 import org.mapstruct.NullValuePropertyMappingStrategy;
-import ru.gmm.demo.model.api.UserPatchRq;
-import ru.gmm.demo.model.api.UserPatchRs;
-import ru.gmm.demo.model.api.UserRegistrationRq;
-import ru.gmm.demo.model.api.UserRegistrationRs;
-import ru.gmm.demo.model.api.UserRs;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

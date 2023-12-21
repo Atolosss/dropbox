@@ -1,7 +1,8 @@
 package com.dropbox.model.entity;
 
+import com.dropbox.model.entity.support.Audit;
+import com.dropbox.model.entity.support.BaseEntity;
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
@@ -14,11 +15,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,16 +36,12 @@ public class User extends BaseEntity {
     private String firstName;
     private String lastName;
     private LocalDate dateOfBirth;
-    @Column(name = "create_date_time", updatable = false, nullable = false)
-    @CreationTimestamp
-    private LocalDateTime createDateTime;
 
-    @Column(name = "update_date_time")
-    @UpdateTimestamp
-    private LocalDateTime updateDateTime;
+    private Audit audit;
+
     @Builder.Default
     @ToString.Exclude
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<File> files = new ArrayList<>();
 
 }

@@ -2,17 +2,17 @@ package com.dropbox.support;
 
 import com.dropbox.model.entity.File;
 import com.dropbox.model.entity.User;
+import com.dropbox.model.openapi.FilePatchRq;
+import com.dropbox.model.openapi.FileUploadRq;
+import com.dropbox.model.openapi.UserPatchRq;
+import com.dropbox.model.openapi.UserRegistrationRq;
 import lombok.experimental.UtilityClass;
-import ru.gmm.demo.model.api.FilePatchRq;
-import ru.gmm.demo.model.api.FileUploadRq;
-import ru.gmm.demo.model.api.UserPatchRq;
-import ru.gmm.demo.model.api.UserRegistrationRq;
 
 import java.util.List;
 
 @UtilityClass
 public class DataProvider {
-    public static User.UserBuilder prepareUser() {
+    public static User.UserBuilder<?, ?> prepareUser() {
         return User.builder()
             .email("email")
             .files(List.of());

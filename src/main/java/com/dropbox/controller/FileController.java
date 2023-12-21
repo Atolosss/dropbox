@@ -1,13 +1,13 @@
 package com.dropbox.controller;
 
+import com.dropbox.controller.openapi.FileApi;
+import com.dropbox.model.openapi.FilePatchRq;
+import com.dropbox.model.openapi.FileRs;
+import com.dropbox.model.openapi.FileUploadRq;
 import com.dropbox.service.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import ru.gmm.demo.controller.api.FileApi;
-import ru.gmm.demo.model.api.FilePatchRq;
-import ru.gmm.demo.model.api.FileRs;
-import ru.gmm.demo.model.api.FileUploadRq;
 
 @RestController
 @RequiredArgsConstructor
