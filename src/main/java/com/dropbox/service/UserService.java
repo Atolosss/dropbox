@@ -27,12 +27,11 @@ public class UserService {
             throw new ServiceException(ErrorCode.ERR_CODE_001, userRegistrationRq.getEmail());
         }
 
-        final User user = userMapper.toUser(userRegistrationRq);
-        final User inserted = userRepository.save(user);
+        final User inserted = userRepository.save(userMapper.toUser(userRegistrationRq));
         return userMapper.toUserRegistrationRs(inserted);
     }
 
-    public UserPatchRs patchUser(final String id, final UserPatchRq userPatchRq) {
+    public UserPatchRs patchUser(final Long id, final UserPatchRq userPatchRq) {
         final User user = userRepository.findById(id)
             .orElseThrow();
         userMapper.update(user, userPatchRq);
@@ -40,7 +39,7 @@ public class UserService {
         return userMapper.toUserPatchRs(saved);
     }
 
-    public void deleteUser(final String id) {
+    public void deleteUser(final Long id) {
         final User user = userRepository.findById(id)
             .orElseThrow();
         userRepository.delete(user);
@@ -51,7 +50,7 @@ public class UserService {
         return userMapper.toUserRsList(users);
     }
 
-    public UserRs getUser(final String id) {
+    public UserRs getUser(final Long id) {
         final User user = userRepository.findById(id).orElseThrow();
         return userMapper.toUserRs(user);
     }

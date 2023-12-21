@@ -1,6 +1,7 @@
 package com.dropbox.mapper;
 
 import com.dropbox.model.entity.File;
+import com.dropbox.model.entity.User;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -13,20 +14,26 @@ import ru.gmm.demo.model.api.FileUploadRq;
 @Mapper(config = MapperConfiguration.class)
 public interface FileMapper {
 
-    @BeanMapping(ignoreByDefault = true)
-    @Mapping(target = "name", source = "name")
-    @Mapping(target = "userId", source = "userId")
-    File toFile(FileUploadRq fileUploadRq);
+    String ID = "id";
+    String NAME = "name";
+    String URL = "url";
+
+    default File toFile(final FileUploadRq fileUploadRq, final User user) {
+        return File.builder()
+            .name(fileUploadRq.getName())
+            .user(user)
+            .build();
+    }
 
     @BeanMapping(ignoreByDefault = true)
-    @Mapping(target = "id", source = "id")
-    @Mapping(target = "name", source = "name")
-    @Mapping(target = "url", source = "url")
+    @Mapping(target = ID, source = ID)
+    @Mapping(target = NAME, source = NAME)
+    @Mapping(target = URL, source = URL)
     FileRs toFileRs(File file);
 
     @BeanMapping(ignoreByDefault = true, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mapping(target = "name", source = "name")
-    @Mapping(target = "url", source = "url")
+    @Mapping(target = NAME, source = NAME)
+    @Mapping(target = URL, source = URL)
     void update(@MappingTarget File file, FilePatchRq userFilePatchRq);
 
 }

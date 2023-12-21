@@ -36,7 +36,7 @@ public class DataProvider {
             .name("How make doc");
     }
 
-    public static FileUploadRq.FileUploadRqBuilder prepareFileUploadRq(final String id) {
+    public static FileUploadRq.FileUploadRqBuilder prepareFileUploadRq(final Long id) {
         return FileUploadRq.builder()
             .name("How make doc")
             .userId(id);

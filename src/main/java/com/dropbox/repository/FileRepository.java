@@ -1,10 +1,8 @@
 package com.dropbox.repository;
 
 import com.dropbox.model.entity.File;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+public interface FileRepository extends JpaRepository<File, Long> {
 
-public interface FileRepository extends MongoRepository<File, String> {
-    List<File> findAllByUserId(String userId);
 }

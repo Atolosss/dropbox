@@ -5,7 +5,6 @@ import com.dropbox.support.DataProvider;
 import com.dropbox.support.IntegrationTestBase;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.ParameterizedTypeReference;
-import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.gmm.demo.model.api.FileRs;
 import ru.gmm.demo.model.api.UserPatchRq;
 import ru.gmm.demo.model.api.UserPatchRs;
@@ -17,7 +16,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Testcontainers
 class UserControllerTest extends IntegrationTestBase {
 
     public static final String API = "api";
@@ -60,10 +58,10 @@ class UserControllerTest extends IntegrationTestBase {
                 .name("How make doc")));
     }
 
-    private List<FileRs> getUserFiles(final String id) {
+    private List<FileRs> getUserFiles(final Long id) {
         return webTestClient.get()
             .uri(uriBuilder -> uriBuilder
-                .pathSegment(API, V_1, USERS, id, FILES)
+                .pathSegment(API, V_1, USERS, String.valueOf(id), FILES)
                 .build())
             .exchange()
             .expectStatus().isEqualTo(200)
@@ -133,10 +131,10 @@ class UserControllerTest extends IntegrationTestBase {
                 .build());
     }
 
-    private UserRs getUser(final String id) {
+    private UserRs getUser(final Long id) {
         return webTestClient.get()
             .uri(uriBuilder -> uriBuilder
-                .pathSegment(API, V_1, USERS, id)
+                .pathSegment(API, V_1, USERS, String.valueOf(id))
                 .build())
             .exchange()
             .expectStatus().isEqualTo(200)
@@ -145,10 +143,10 @@ class UserControllerTest extends IntegrationTestBase {
             .getResponseBody();
     }
 
-    private void deleteUser(final String id) {
+    private void deleteUser(final Long id) {
         webTestClient.delete()
             .uri(uriBuilder -> uriBuilder
-                .pathSegment(API, V_1, USERS, id)
+                .pathSegment(API, V_1, USERS, String.valueOf(id))
                 .build())
             .exchange()
             .expectStatus().isEqualTo(200);
@@ -167,10 +165,10 @@ class UserControllerTest extends IntegrationTestBase {
             .getResponseBody();
     }
 
-    private UserPatchRs patchUser(final UserPatchRq request, final String id) {
+    private UserPatchRs patchUser(final UserPatchRq request, final Long id) {
         return webTestClient.patch()
             .uri(uriBuilder -> uriBuilder
-                .pathSegment(API, V_1, USERS, id)
+                .pathSegment(API, V_1, USERS, String.valueOf(id))
                 .build())
             .bodyValue(request)
             .exchange()

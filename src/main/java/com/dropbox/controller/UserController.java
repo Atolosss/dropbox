@@ -27,12 +27,12 @@ public class UserController implements UserApi {
     }
 
     @Override
-    public ResponseEntity<UserPatchRs> patchUser(final String id, final UserPatchRq userPatchRq) {
+    public ResponseEntity<UserPatchRs> patchUser(final Long id, final UserPatchRq userPatchRq) {
         return ResponseEntity.ok(userService.patchUser(id, userPatchRq));
     }
 
     @Override
-    public ResponseEntity<Void> deleteUser(final String id) {
+    public ResponseEntity<Void> deleteUser(final Long id) {
         userService.deleteUser(id);
         return ResponseEntity.ok(null);
 
@@ -44,12 +44,12 @@ public class UserController implements UserApi {
     }
 
     @Override
-    public ResponseEntity<UserRs> getUser(final String id) {
+    public ResponseEntity<UserRs> getUser(final Long id) {
         return ResponseEntity.ok(userService.getUser(id));
     }
 
     @Override
-    public ResponseEntity<List<FileRs>> getUserFiles(final String userId) {
+    public ResponseEntity<List<FileRs>> getUserFiles(final Long userId) {
         return ResponseEntity.ok(fileService.getUserFiles(userId));
     }
 }
