@@ -1,7 +1,6 @@
 package com.dropbox.controller;
 
 import com.dropbox.controller.openapi.FileApi;
-import com.dropbox.model.openapi.FilePatchRq;
 import com.dropbox.model.openapi.FileRs;
 import com.dropbox.model.openapi.FileUploadRq;
 import com.dropbox.model.openapi.UploadFileDtoRs;
@@ -22,18 +21,8 @@ public class FileController implements FileApi {
     }
 
     @Override
-    public ResponseEntity<Void> deleteFile(final Long id) {
-        fileService.deleteFile(id);
-        return ResponseEntity.ok(null);
-    }
-
-    @Override
-    public ResponseEntity<UploadFileDtoRs> getFile(final Long id) {
+    public ResponseEntity<UploadFileDtoRs> getFile(final String id) {
         return ResponseEntity.ok(fileService.getFile(id));
     }
 
-    @Override
-    public ResponseEntity<FileRs> patchFile(final Long id, final FilePatchRq filePatchRq) {
-        return ResponseEntity.ok(fileService.patchFile(id, filePatchRq));
-    }
 }

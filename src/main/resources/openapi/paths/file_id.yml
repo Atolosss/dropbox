@@ -7,12 +7,11 @@ get:
   parameters:
     - name: id
       in: path
-      description: 'The id that needs to be fetched. Use 123 for example. '
+      description: 'File id from FileBinaryData Mongo collection'
       required: true
       schema:
-        type: integer
-        format: int64
-      example: 65787
+        type: string
+      example: 658d7ebaf94ef911c60f2a6d
   responses:
     200:
       description: Success
@@ -25,57 +24,3 @@ get:
       content:
         application/json: { }
 
-delete:
-  tags:
-    - file
-  summary: Delete file
-  description: Delete File in bd
-  operationId: deleteFile
-  parameters:
-    - name: id
-      in: path
-      description: 'The id that needs to be fetched. Use 123 for example. '
-      required: true
-      schema:
-        type: integer
-        format: int64
-      example: 65787beb3b8aa13a463cf7af
-  responses:
-    200:
-      description: Success
-      content:
-        application/json: { }
-
-patch:
-  tags:
-    - file
-  summary: Patch file
-  description: Patch file in bd
-  operationId: patchFile
-  parameters:
-    - name: id
-      in: path
-      description: 'The id that needs to be fetched. Use 123 for example. '
-      required: true
-      schema:
-        type: integer
-        format: int64
-      example: 65787beb3b8aa13a463cf7af
-  requestBody:
-    description: Patch user object
-    content:
-      '*/*':
-        schema:
-          $ref: '../schemas/user/FilePatchRq.yml'
-    required: true
-  responses:
-    200:
-      description: Success
-      content:
-        application/json:
-          schema:
-            $ref: '../schemas/user/FileRs.yml'
-    500:
-      description: Something went wrong
-      content:
-        application/json: { }

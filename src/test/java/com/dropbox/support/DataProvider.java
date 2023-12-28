@@ -1,6 +1,5 @@
 package com.dropbox.support;
 
-import com.dropbox.model.entity.File;
 import com.dropbox.model.entity.User;
 import com.dropbox.model.openapi.FilePatchRq;
 import com.dropbox.model.openapi.FileUploadRq;

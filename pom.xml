@@ -8,11 +8,9 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.example</groupId>
-    <artifactId>dropbox-user-service</artifactId>
+    <groupId>com.dropbox</groupId>
+    <artifactId>dropbox-api-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>user</name>
-    <description>user-service</description>
 
     <properties>
         <java.version>19</java.version>
@@ -37,10 +35,6 @@
     </dependencyManagement>
 
     <dependencies>
-<!--        <dependency>-->
-<!--            <groupId>com.google.code.gson</groupId>-->
-<!--            <artifactId>gson</artifactId>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>

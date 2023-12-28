@@ -1,8 +1,6 @@
 package com.dropbox.support;
 
-import com.dropbox.model.entity.File;
 import com.dropbox.model.entity.User;
-import com.dropbox.repository.FileRepository;
 import com.dropbox.repository.UserRepository;
 import com.dropbox.service.FileService;
 import com.dropbox.service.UserService;

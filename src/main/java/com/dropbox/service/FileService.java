@@ -6,76 +6,57 @@ import com.dropbox.exceptions.ServiceException;
 import com.dropbox.mapper.FileMapper;
 import com.dropbox.model.dto.UploadFileDtoRq;
 import com.dropbox.model.dto.UploadFileRs;
-import com.dropbox.model.entity.File;
-import com.dropbox.model.entity.User;
-import com.dropbox.model.openapi.FilePatchRq;
 import com.dropbox.model.openapi.FileRs;
 import com.dropbox.model.openapi.FileUploadRq;
 import com.dropbox.model.openapi.UploadFileDtoRs;
-import com.dropbox.repository.FileRepository;
 import com.dropbox.repository.UserRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Base64;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class FileService {
 
-    private final FileRepository fileRepository;
     private final FileMapper fileMapper;
     private final UserRepository userRepository;
     private final FileStorageClient fileStorageClient;
 
-    private static UploadFileDtoRq getUploadFileDtoRq(final FileUploadRq fileUploadRq) {
-        return UploadFileDtoRq.builder()
+    public FileRs createFile(final FileUploadRq fileUploadRq) {
+        if (!userRepository.existsById(fileUploadRq.getUserId())) {
+            throw new ServiceException(ErrorCode.ERR_CODE_001, fileUploadRq.getUserId());
+        }
+
+        final UploadFileDtoRq uploadFileDtoRq = UploadFileDtoRq.builder()
             .base64Data(fileUploadRq.getFileData())
             .name(fileUploadRq.getName())
+            .userId(fileUploadRq.getUserId())
             .build();
+
+        final UploadFileRs uploadFileRs = fileStorageClient.uploadFile(uploadFileDtoRq);
+        return fileMapper.toFileRs(uploadFileRs, fileUploadRq);
     }
 
-    //TODO: нельзя делать синхронные запросы в транзакции!!!!!!!
-    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT)
-    public FileRs createFile(final FileUploadRq fileUploadRq) {
-        final UploadFileRs uploadFile = fileStorageClient.uploadFile(getUploadFileDtoRq(fileUploadRq));
-
-        final File file = userRepository.findById(fileUploadRq.getUserId())
-            .map(user -> fileMapper.toFile(fileUploadRq, user, uploadFile.getKey()))
-            .orElseThrow(() -> new ServiceException(ErrorCode.ERR_CODE_001, fileUploadRq.getUserId()));
-
-        fileRepository.save(file);
-
-        return fileMapper.toFileRs(file);
-    }
-
-    public UploadFileDtoRs getFile(final Long id) {
-        final File file = fileRepository.findById(id)
-            .orElseThrow();
-        final String encoded = Base64.getEncoder().encodeToString(fileStorageClient.downloadFile(file.getKey()));
-
-        return fileMapper.toUploadFileDtoRs(file, encoded);
-    }
-
-    public void deleteFile(final Long id) {
-        fileRepository.deleteById(id);
-    }
-
-    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT)
-    public FileRs patchFile(final Long id, final FilePatchRq userFilePatchRq) {
-        final File file = fileRepository.findById(id)
-            .orElseThrow();
-
-        return fileMapper.toFileRs(fileRepository.save(fileMapper.update(file, userFilePatchRq)));
+    public UploadFileDtoRs getFile(final String fileKey) {
+        final DataBuffer downloadFile = fileStorageClient.downloadFile(fileKey);
+        try (InputStream inputStream = downloadFile.asInputStream()) {
+            final String encoded = Base64.getEncoder().encodeToString(inputStream.readAllBytes());
+            return fileMapper.toUploadFileDtoRs(encoded);
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT)
     public List<FileRs> getUserFiles(final Long id) {
-        final User user = userRepository.findById(id).orElseThrow();
-        return user.getFiles().stream().map(fileMapper::toFileRs).toList();
+        return null;
     }
 }

@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class UploadFileDtoRq {
     private String name;
     private String base64Data;
+    private Long userId;
 }
