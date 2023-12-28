@@ -65,16 +65,15 @@ public class FileService {
         fileRepository.deleteById(id);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT)
     public FileRs patchFile(final Long id, final FilePatchRq userFilePatchRq) {
         final File file = fileRepository.findById(id)
             .orElseThrow();
 
-        fileMapper.update(file, userFilePatchRq);
-
-        final File saved = fileRepository.save(file);
-        return fileMapper.toFileRs(saved);
+        return fileMapper.toFileRs(fileRepository.save(fileMapper.update(file, userFilePatchRq)));
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT)
     public List<FileRs> getUserFiles(final Long id) {
         final User user = userRepository.findById(id).orElseThrow();
         return user.getFiles().stream().map(fileMapper::toFileRs).toList();

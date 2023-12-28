@@ -33,6 +33,7 @@ public class DataProvider {
 
     public static File.FileBuilder prepareFile() {
         return File.builder()
+            .key("123")
             .name("How make doc");
     }
 

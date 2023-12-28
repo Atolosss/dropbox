@@ -34,9 +34,7 @@ public class UserService {
     public UserPatchRs patchUser(final Long id, final UserPatchRq userPatchRq) {
         final User user = userRepository.findById(id)
             .orElseThrow();
-        userMapper.update(user, userPatchRq);
-        final User saved = userRepository.save(user);
-        return userMapper.toUserPatchRs(saved);
+        return userMapper.toUserPatchRs(userRepository.save(userMapper.update(user, userPatchRq)));
     }
 
     public void deleteUser(final Long id) {
@@ -51,7 +49,8 @@ public class UserService {
     }
 
     public UserRs getUser(final Long id) {
-        final User user = userRepository.findById(id).orElseThrow();
+
+        final User user = userRepository.findById(id).orElseThrow(() -> new ServiceException(ErrorCode.ERR_CODE_002, "User with this id %s not found"));
         return userMapper.toUserRs(user);
     }
 }

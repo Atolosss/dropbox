@@ -43,7 +43,7 @@ public interface UserMapper {
     @Mapping(target = NAME, source = NAME)
     @Mapping(target = NAME1, source = NAME1)
     @Mapping(target = DATE_OF_BIRTH, source = DATE_OF_BIRTH, qualifiedByName = "mapDateOfBirth")
-    void update(@MappingTarget User user, UserPatchRq userPatchRq);
+    User update(@MappingTarget User user, UserPatchRq userPatchRq);
 
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = ID, source = ID)

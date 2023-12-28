@@ -32,7 +32,7 @@ public interface FileMapper {
     @BeanMapping(ignoreByDefault = true, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "name", source = "name")
     @Mapping(target = "key", source = "url")
-    void update(@MappingTarget File file, FilePatchRq userFilePatchRq);
+    File update(@MappingTarget File file, FilePatchRq userFilePatchRq);
 
     default UploadFileDtoRs toUploadFileDtoRs(final File file, final String s) {
         return UploadFileDtoRs.builder()
