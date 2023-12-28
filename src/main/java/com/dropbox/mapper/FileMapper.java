@@ -5,6 +5,7 @@ import com.dropbox.model.entity.User;
 import com.dropbox.model.openapi.FilePatchRq;
 import com.dropbox.model.openapi.FileRs;
 import com.dropbox.model.openapi.FileUploadRq;
+import com.dropbox.model.openapi.UploadFileDtoRs;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -33,4 +34,10 @@ public interface FileMapper {
     @Mapping(target = "key", source = "url")
     void update(@MappingTarget File file, FilePatchRq userFilePatchRq);
 
+    default UploadFileDtoRs toUploadFileDtoRs(final File file, final String s) {
+        return UploadFileDtoRs.builder()
+            .name(file.getName())
+            .fileData(s)
+            .build();
+    }
 }

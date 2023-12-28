@@ -11,6 +11,7 @@ import com.dropbox.model.entity.User;
 import com.dropbox.model.openapi.FilePatchRq;
 import com.dropbox.model.openapi.FileRs;
 import com.dropbox.model.openapi.FileUploadRq;
+import com.dropbox.model.openapi.UploadFileDtoRs;
 import com.dropbox.repository.FileRepository;
 import com.dropbox.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Base64;
 import java.util.List;
 
 @Service
@@ -51,10 +53,12 @@ public class FileService {
         return fileMapper.toFileRs(file);
     }
 
-    public FileRs getFile(final Long id) {
+    public UploadFileDtoRs getFile(final Long id) {
         final File file = fileRepository.findById(id)
             .orElseThrow();
-        return fileMapper.toFileRs(file);
+        final String encoded = Base64.getEncoder().encodeToString(fileStorageClient.downloadFile(file.getKey()));
+
+        return fileMapper.toUploadFileDtoRs(file, encoded);
     }
 
     public void deleteFile(final Long id) {

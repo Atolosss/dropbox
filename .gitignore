@@ -142,3 +142,4 @@ application.yml
 /sec/
 /k8s-ansible/
 /Dockerfile
+/.idea/

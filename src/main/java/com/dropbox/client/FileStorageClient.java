@@ -22,4 +22,15 @@ public class FileStorageClient {
             .bodyToMono(UploadFileRs.class)
             .block();
     }
+
+    public byte[] downloadFile(final String id) {
+        return webClient.get()
+            .uri(uriBuilder -> uriBuilder.pathSegment("api", "v1", "files", id)
+                .build())
+            .accept(MediaType.APPLICATION_JSON)
+            .retrieve()
+            .bodyToMono(byte[].class)
+            .block();
+    }
+
 }

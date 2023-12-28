@@ -1,0 +1,9 @@
+type: object
+properties:
+  name:
+    type: string
+    example: exampleFile
+  fileData:
+    type: string
+    example: 0J7QsdGJ0LjQtSDQv9GA0LDQstC40LvQsDoKMS4g0JLQsNC70L
+

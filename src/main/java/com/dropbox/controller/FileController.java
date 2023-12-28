@@ -4,6 +4,7 @@ import com.dropbox.controller.openapi.FileApi;
 import com.dropbox.model.openapi.FilePatchRq;
 import com.dropbox.model.openapi.FileRs;
 import com.dropbox.model.openapi.FileUploadRq;
+import com.dropbox.model.openapi.UploadFileDtoRs;
 import com.dropbox.service.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,7 @@ public class FileController implements FileApi {
     }
 
     @Override
-    public ResponseEntity<FileRs> getFile(final Long id) {
+    public ResponseEntity<UploadFileDtoRs> getFile(final Long id) {
         return ResponseEntity.ok(fileService.getFile(id));
     }
 

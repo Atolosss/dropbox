@@ -19,7 +19,7 @@ get:
       content:
         application/json:
           schema:
-            $ref: '../schemas/user/FileRs.yml'
+            $ref: '../schemas/user/UploadFileDtoRs.yml'
     404:
       description: File not found
       content:
