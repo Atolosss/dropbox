@@ -37,10 +37,6 @@
     </dependencyManagement>
 
     <dependencies>
-<!--        <dependency>-->
-<!--            <groupId>com.google.code.gson</groupId>-->
-<!--            <artifactId>gson</artifactId>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -100,6 +96,11 @@
             <artifactId>spotbugs-annotations</artifactId>
             <version>4.7.3</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.telegram</groupId>
+            <artifactId>telegrambots</artifactId>
+            <version>6.7.0</version>
         </dependency>
     </dependencies>
 
