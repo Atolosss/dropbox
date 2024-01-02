@@ -32,3 +32,6 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
     show-sql: true
+telegram:
+  bot:
+    token: 6761589731:AAG95kAz3-FVgEnjSw0z_qhkB973E_dZyes
