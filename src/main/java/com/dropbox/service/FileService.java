@@ -13,14 +13,10 @@ import com.dropbox.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Base64;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -55,8 +51,4 @@ public class FileService {
         }
     }
 
-    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT)
-    public List<FileRs> getUserFiles(final Long id) {
-        return null;
-    }
 }

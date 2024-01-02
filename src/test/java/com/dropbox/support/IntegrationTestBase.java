@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-import java.util.List;
 import java.util.Set;
 
 public class IntegrationTestBase extends DatabaseAwareTestBase {
@@ -19,8 +18,6 @@ public class IntegrationTestBase extends DatabaseAwareTestBase {
     protected WebTestClient webTestClient;
     @Autowired
     protected UserRepository userRepository;
-    @Autowired
-    protected FileRepository fileRepository;
     @Autowired
     protected FileService fileService;
     @Autowired
@@ -47,17 +44,5 @@ public class IntegrationTestBase extends DatabaseAwareTestBase {
         userRepository.save(user);
     }
 
-    protected void createFile(final File file) {
-        fileRepository.save(file);
-    }
-
-    protected void createUserAndFile() {
-        final User user = DataProvider.prepareUser().build();
-        final File file = DataProvider.prepareFile().build();
-        file.setUser(user);
-        user.setFiles(List.of(file));
-        createUser(user);
-        createFile(file);
-
-    }
 }
+

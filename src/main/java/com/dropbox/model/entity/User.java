@@ -30,7 +30,6 @@ public class User extends BaseEntity {
     private String firstName;
     private String lastName;
     private LocalDate dateOfBirth;
-
     private Audit audit;
 
 }
