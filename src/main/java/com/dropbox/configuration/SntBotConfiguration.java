@@ -12,7 +12,7 @@ public class SntBotConfiguration {
 
     @Bean
     public TelegramBotsApi telegramBotsApi(final SntBot sntBot) throws TelegramApiException {
-        var api = new TelegramBotsApi(DefaultBotSession.class);
+        final var api = new TelegramBotsApi(DefaultBotSession.class);
         api.registerBot(sntBot);
         return api;
     }

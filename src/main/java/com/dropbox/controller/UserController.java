@@ -1,7 +1,6 @@
 package com.dropbox.controller;
 
 import com.dropbox.controller.openapi.UserApi;
-import com.dropbox.model.openapi.FileRs;
 import com.dropbox.model.openapi.UserPatchRq;
 import com.dropbox.model.openapi.UserPatchRs;
 import com.dropbox.model.openapi.UserRegistrationRq;
@@ -48,8 +47,4 @@ public class UserController implements UserApi {
         return ResponseEntity.ok(userService.getUser(id));
     }
 
-    @Override
-    public ResponseEntity<List<FileRs>> getUserFiles(final Long userId) {
-        return ResponseEntity.ok(fileService.getUserFiles(userId));
-    }
 }

@@ -13,6 +13,8 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 public class SntBot extends TelegramLongPollingBot {
     private static final Logger LOG = LoggerFactory.getLogger(SntBot.class);
     private static final String BEGIN = "/start";
+    private static final String SOMETHING_HAPPENED = "/something_happened";
+    private static final String DROP = "/drop";
 
     public SntBot(@Value("${telegram.bot.token}") final String botToken) {
         super(botToken);
@@ -23,20 +25,27 @@ public class SntBot extends TelegramLongPollingBot {
         if (!update.hasMessage() || update.getMessage().hasText()) {
             return;
         }
-        var message = update.getMessage().getText();
-        var chatId = update.getMessage().getChatId();
+        final var message = update.getMessage().getText();
+        final var chatId = update.getMessage().getChatId();
 
         switch (message) {
             case BEGIN -> {
                 final String userName = update.getMessage().getChat().getUserName();
                 startCommand(chatId, userName);
             }
-            default -> System.out.println("xnj nj nj nj");
+            case SOMETHING_HAPPENED -> {
+                final String userName = update.getMessage().getChat().getUserName();
+                startCommand(chatId, userName);
+            }
+            default -> {
+                final String userName = update.getMessage().getChat().getUserName();
+                startCommand(chatId, userName);
+            }
         }
     }
 
     private void startCommand(final Long chatId, final String userName) {
-        var text = """
+        final var text = """
             Добро пожаловать в бот, %s!
 
             Здесь Вы сможете сообщить обо всех неисправностях или пожеланиях приложив фотограции.
@@ -48,7 +57,7 @@ public class SntBot extends TelegramLongPollingBot {
             Дополнительные команды:
             /help - получение справки
             """;
-        var formattedText = String.format(text, userName);
+        final var formattedText = String.format(text, userName);
         sendMessage(chatId, formattedText);
     }
 
@@ -58,8 +67,8 @@ public class SntBot extends TelegramLongPollingBot {
     }
 
     private void sendMessage(final Long chatId, final String text) {
-        var chatIdStr = String.valueOf(chatId);
-        var sendMessage = new SendMessage(chatIdStr, text);
+        final var chatIdStr = String.valueOf(chatId);
+        final var sendMessage = new SendMessage(chatIdStr, text);
         try {
             execute(sendMessage);
         } catch (TelegramApiException e) {
