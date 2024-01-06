@@ -75,7 +75,7 @@ public class SntBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(final Update update) {
-        if (!update.hasMessage() || update.getMessage().hasText()) {
+        if (!update.hasMessage() || !update.getMessage().hasText()) {
             return;
         }
         final var message = update.getMessage().getText();
