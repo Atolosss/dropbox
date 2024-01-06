@@ -36,7 +36,5 @@ public class User extends BaseEntity {
     @Column(name = "create_date_time", nullable = false, updatable = false)
     private LocalDateTime createDateTime;
     private boolean isActive;
-    @Enumerated(EnumType.STRING)
-    private UserState state;
 
 }
