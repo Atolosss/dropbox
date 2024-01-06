@@ -28,7 +28,7 @@ public class SntBot extends TelegramLongPollingBot {
     public static SendMessage hermitageInlineKeyboardAb(long chat_id) {
         SendMessage message = new SendMessage();
         message.setChatId(chat_id);
-        message.setText("Выберите дальнейшие действие");
+        message.setText("Выберите дальнейшие действие:");
 
         InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
 
@@ -36,7 +36,7 @@ public class SntBot extends TelegramLongPollingBot {
 
         List<InlineKeyboardButton> rowInline1 = new ArrayList<>();
         InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton();
-        inlineKeyboardButton1.setText("Регистрация пользователя");
+        inlineKeyboardButton1.setText("Регистрация \n пользователя");
         inlineKeyboardButton1.setCallbackData("РЕГИСТРАЦИЯ");
 
         InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton();
@@ -68,28 +68,42 @@ public class SntBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(final Update update) {
-        if (!update.hasMessage() || !update.getMessage().hasText()) {
-            return;
-        }
-        final var message = update.getMessage().getText();
-        final var chatId = update.getMessage().getChatId();
+        if (update.hasMessage() || update.getMessage().hasText()) {
 
-        switch (message) {
-            case BEGIN -> {
-                final String userName = update.getMessage().getChat().getUserName();
-                startCommand(chatId, userName);
-                try {
-                    execute(hermitageInlineKeyboardAb(chatId));
-                } catch (TelegramApiException e) {
-                    throw new RuntimeException(e);
+            final var message = update.getMessage().getText();
+            final var chatId = update.getMessage().getChatId();
+
+            switch (message) {
+                case BEGIN -> {
+                    final String userName = update.getMessage().getChat().getUserName();
+                    startCommand(chatId, userName);
+                    try {
+                        execute(hermitageInlineKeyboardAb(chatId));
+                    } catch (TelegramApiException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                case UPLOAD -> {
+
+                }
+                default -> {
+                    final String userName = update.getMessage().getChat().getUserName();
+                    startCommand(chatId, userName);
                 }
             }
-            case UPLOAD -> {
+        } else if (update.hasCallbackQuery()) {
 
-            }
-            default -> {
-                final String userName = update.getMessage().getChat().getUserName();
-                startCommand(chatId, userName);
+// то бот совершает определенные действия
+// (в моем случае – отправляет пользователю картинки
+// или перенаправляет его на страницу в Интернете)
+
+            String call_data = update.getCallbackQuery().getData();
+            long chat_id = update.getCallbackQuery().getMessage().getChatId();
+
+            if (call_data.equals("РЕГИСТРАЦИЯ")) {
+                sendMessage(chat_id, "да хуй тебе");
+            } else if (call_data.equals("ПРОБЛЕМА")) {
+                sendMessage(chat_id, "да хуй тебе дважды");
             }
         }
     }
