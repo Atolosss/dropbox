@@ -53,4 +53,5 @@ public class UserService {
         final User user = userRepository.findById(id).orElseThrow(() -> new ServiceException(ErrorCode.ERR_CODE_002, "User with this id %s not found"));
         return userMapper.toUserRs(user);
     }
+
 }

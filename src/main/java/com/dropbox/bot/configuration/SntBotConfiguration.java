@@ -1,4 +1,4 @@
-package com.dropbox.configuration;
+package com.dropbox.bot.configuration;
 
 import com.dropbox.bot.SntBot;
 import org.springframework.context.annotation.Bean;
@@ -9,6 +9,12 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 @Configuration
 public class SntBotConfiguration {
+
+    public final SntBot sntBot;
+
+    public SntBotConfiguration(SntBot sntBot) {
+        this.sntBot = sntBot;
+    }
 
     @Bean
     public TelegramBotsApi telegramBotsApi(final SntBot sntBot) throws TelegramApiException {
