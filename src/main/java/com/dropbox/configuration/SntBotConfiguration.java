@@ -1,4 +1,4 @@
-package com.dropbox.bot.configuration;
+package com.dropbox.configuration;
 
 import com.dropbox.bot.SntBot;
 import org.springframework.context.annotation.Bean;

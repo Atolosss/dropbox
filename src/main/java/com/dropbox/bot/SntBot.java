@@ -17,19 +17,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-
 public class SntBot extends TelegramLongPollingBot {
     private static final Logger LOG = LoggerFactory.getLogger(SntBot.class);
     private static final String BEGIN = "/start";
     private static final String UPLOAD = "/upload";
     private static final String DOWNLOAD = "/download";
-    private final FileController fileController;
-    private final UserController userController;
 
-    public SntBot(@Value("${telegram.bot.token}") final String botToken, FileController fileController, UserController userController) {
+    public SntBot(@Value("${telegram.bot.token}") final String botToken) {
         super(botToken);
-        this.fileController = fileController;
-        this.userController = userController;
     }
 
     public static SendMessage hermitageInlineKeyboardAb(long chat_id) {
