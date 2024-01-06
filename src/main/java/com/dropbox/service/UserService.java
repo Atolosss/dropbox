@@ -23,9 +23,9 @@ public class UserService {
     private final UserMapper userMapper;
 
     public UserRegistrationRs createUser(final UserRegistrationRq userRegistrationRq) {
-        if (userRepository.findUserByEmail(userRegistrationRq.getEmail()).isPresent()) {
-            throw new ServiceException(ErrorCode.ERR_CODE_001, userRegistrationRq.getEmail());
-        }
+//        if (userRepository.findUserByEmail(userRegistrationRq.getEmail()).isPresent()) {
+//            throw new ServiceException(ErrorCode.ERR_CODE_001, userRegistrationRq.getEmail());
+//        }
 
         final User inserted = userRepository.save(userMapper.toUser(userRegistrationRq));
         return userMapper.toUserRegistrationRs(inserted);
