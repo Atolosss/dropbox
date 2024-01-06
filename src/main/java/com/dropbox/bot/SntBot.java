@@ -1,7 +1,5 @@
 package com.dropbox.bot;
 
-import com.dropbox.controller.FileController;
-import com.dropbox.controller.UserController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -80,7 +78,11 @@ public class SntBot extends TelegramLongPollingBot {
             case BEGIN -> {
                 final String userName = update.getMessage().getChat().getUserName();
                 startCommand(chatId, userName);
-                hermitageInlineKeyboardAb(chatId);
+                try {
+                    execute(hermitageInlineKeyboardAb(chatId));
+                } catch (TelegramApiException e) {
+                    throw new RuntimeException(e);
+                }
             }
             case UPLOAD -> {
 
