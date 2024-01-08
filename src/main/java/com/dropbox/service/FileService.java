@@ -5,21 +5,24 @@ import com.dropbox.constant.ErrorCode;
 import com.dropbox.exceptions.ServiceException;
 import com.dropbox.mapper.FileMapper;
 import com.dropbox.model.dto.UploadFileDtoRq;
+import com.dropbox.model.dto.UploadFileDtoRs;
 import com.dropbox.model.dto.UploadFileRs;
 import com.dropbox.model.openapi.FileRs;
 import com.dropbox.model.openapi.FileUploadRq;
-import com.dropbox.model.openapi.UploadFileDtoRs;
 import com.dropbox.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Base64;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class FileService {
 
     private final FileMapper fileMapper;
@@ -49,6 +52,14 @@ public class FileService {
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    public List<String> getListMetaFiles(final Long chatId) {
+        return fileStorageClient.uploadListMetaFiles(chatId).stream().map(UploadFileDtoRs::getName).toList();
+    }
+
+    public List<UploadFileDtoRs> getFiles(final Long chatId) {
+        return null;
     }
 
 }

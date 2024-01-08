@@ -12,7 +12,7 @@ public class SntBotConfiguration {
 
     public final SntBot sntBot;
 
-    public SntBotConfiguration(SntBot sntBot) {
+    public SntBotConfiguration(final SntBot sntBot) {
         this.sntBot = sntBot;
     }
 
