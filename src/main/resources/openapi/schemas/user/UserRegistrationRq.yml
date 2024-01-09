@@ -1,11 +1,16 @@
 type: object
 required:
-  - email
-  - password
+  - telegramUserId
+  - firstName
+  - lastName
 properties:
-  email:
+  telegramUserId:
+    type: integer
+    format: int64
+    example: 132135
+  firstName:
     type: string
-    example: example@mail.ru
-  password:
+    example: max
+  lastName:
     type: string
-    example: 123
+    example: komar

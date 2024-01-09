@@ -4,11 +4,10 @@ import com.dropbox.client.FileStorageClient;
 import com.dropbox.constant.ErrorCode;
 import com.dropbox.exceptions.ServiceException;
 import com.dropbox.mapper.FileMapper;
-import com.dropbox.model.dto.UploadFileDtoRq;
-import com.dropbox.model.dto.UploadFileDtoRs;
 import com.dropbox.model.dto.UploadFileRs;
 import com.dropbox.model.openapi.FileRs;
-import com.dropbox.model.openapi.FileUploadRq;
+import com.dropbox.model.openapi.UploadFileDtoRq;
+import com.dropbox.model.openapi.UploadFileDtoRs;
 import com.dropbox.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,19 +28,13 @@ public class FileService {
     private final UserRepository userRepository;
     private final FileStorageClient fileStorageClient;
 
-    public FileRs createFile(final FileUploadRq fileUploadRq) {
-        if (!userRepository.existsById(fileUploadRq.getUserId())) {
-            throw new ServiceException(ErrorCode.ERR_CODE_001, fileUploadRq.getUserId());
+    public FileRs createFile(final UploadFileDtoRq uploadFileDtoRq) {
+        if (!userRepository.existsById(uploadFileDtoRq.getUserId())) {
+            throw new ServiceException(ErrorCode.ERR_CODE_001, uploadFileDtoRq.getUserId());
         }
 
-        final UploadFileDtoRq uploadFileDtoRq = UploadFileDtoRq.builder()
-            .base64Data(fileUploadRq.getFileData())
-            .name(fileUploadRq.getName())
-            .userId(fileUploadRq.getUserId())
-            .build();
-
         final UploadFileRs uploadFileRs = fileStorageClient.uploadFile(uploadFileDtoRq);
-        return fileMapper.toFileRs(uploadFileRs, fileUploadRq);
+        return fileMapper.toFileRs(uploadFileDtoRq, uploadFileRs);
     }
 
     public UploadFileDtoRs getFile(final String fileKey) {
@@ -55,7 +48,7 @@ public class FileService {
     }
 
     public List<String> getListMetaFiles(final Long chatId) {
-        return fileStorageClient.uploadListMetaFiles(chatId).stream().map(UploadFileDtoRs::getName).toList();
+        return fileStorageClient.downloadListMetaFiles(chatId).stream().map(UploadFileDtoRs::getName).toList();
     }
 
     public List<UploadFileDtoRs> getFiles(final Long chatId) {

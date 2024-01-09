@@ -4,8 +4,6 @@ import com.dropbox.constant.ErrorCode;
 import com.dropbox.exceptions.ServiceException;
 import com.dropbox.mapper.UserMapper;
 import com.dropbox.model.entity.User;
-import com.dropbox.model.openapi.UserPatchRq;
-import com.dropbox.model.openapi.UserPatchRs;
 import com.dropbox.model.openapi.UserRegistrationRq;
 import com.dropbox.model.openapi.UserRegistrationRs;
 import com.dropbox.model.openapi.UserRs;
@@ -27,12 +25,6 @@ public class UserService {
         return userMapper.toUserRegistrationRs(inserted);
     }
 
-    public UserPatchRs patchUser(final Long id, final UserPatchRq userPatchRq) {
-        final User user = userRepository.findById(id)
-            .orElseThrow();
-        return userMapper.toUserPatchRs(userRepository.save(userMapper.update(user, userPatchRq)));
-    }
-
     public void deleteUser(final Long id) {
         final User user = userRepository.findById(id)
             .orElseThrow();
@@ -45,7 +37,6 @@ public class UserService {
     }
 
     public UserRs getUser(final Long id) {
-
         final User user = userRepository.findById(id).orElseThrow(() -> new ServiceException(ErrorCode.ERR_CODE_002, "User with this id %s not found"));
         return userMapper.toUserRs(user);
     }

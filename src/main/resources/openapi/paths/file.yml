@@ -9,7 +9,7 @@ post:
     content:
       '*/*':
         schema:
-          $ref: '../schemas/user/FileUploadRq.yml'
+          $ref: '../schemas/user/UploadFileDtoRq.yml'
     required: true
   responses:
     200:

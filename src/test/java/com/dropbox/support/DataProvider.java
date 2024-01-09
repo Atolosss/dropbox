@@ -1,8 +1,7 @@
 package com.dropbox.support;
 
 import com.dropbox.model.entity.User;
-import com.dropbox.model.openapi.FileUploadRq;
-import com.dropbox.model.openapi.UserPatchRq;
+import com.dropbox.model.openapi.UploadFileDtoRq;
 import com.dropbox.model.openapi.UserRegistrationRq;
 import lombok.experimental.UtilityClass;
 
@@ -10,25 +9,21 @@ import lombok.experimental.UtilityClass;
 public class DataProvider {
     public static User.UserBuilder<?, ?> prepareUser() {
         return User.builder()
-            .email("email");
+            .telegramUserId(232L)
+            .lastName("komar")
+            .firstName("max");
     }
 
     public static UserRegistrationRq.UserRegistrationRqBuilder prepareUserRegistrationRq() {
         return UserRegistrationRq.builder()
-            .email("email132")
-            .password("password");
+            .telegramUserId(232L)
+            .lastName("komar")
+            .firstName("max");
     }
-
-    public static UserPatchRq.UserPatchRqBuilder prepareUserPatchRq() {
-        return UserPatchRq.builder()
-            .lastName("max")
-            .firstName("komar")
-            .dateOfBirth("20.03.1993");
-    }
-
-    public static FileUploadRq.FileUploadRqBuilder prepareFileUploadRq(final Long id) {
-        return FileUploadRq.builder()
+    public static UploadFileDtoRq.UploadFileDtoRqBuilder prepareFileUploadRq(final Long id) {
+        return UploadFileDtoRq.builder()
             .name("How make doc")
+            .fileData("123")
             .userId(id);
     }
 

@@ -22,20 +22,3 @@ post:
       description: There is already a user with this email
       content:
         application/json: { }
-get:
-  tags:
-    - user
-  summary: Get all user
-  description: Get all User in bd
-  operationId: getAllUser
-  responses:
-    200:
-      description: Success
-      content:
-        application/json:
-          schema:
-            $ref: '../schemas/user/UserRsList.yml'
-    400:
-      description: There is array is empty
-      content:
-        application/json: { }

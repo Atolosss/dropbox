@@ -1,8 +1,8 @@
 package com.dropbox.client;
 
-import com.dropbox.model.dto.UploadFileDtoRq;
-import com.dropbox.model.dto.UploadFileDtoRs;
 import com.dropbox.model.dto.UploadFileRs;
+import com.dropbox.model.openapi.UploadFileDtoRq;
+import com.dropbox.model.openapi.UploadFileDtoRs;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.buffer.DataBuffer;
@@ -42,7 +42,7 @@ public class FileStorageClient {
             .block();
     }
 
-    public List<UploadFileDtoRs> uploadListMetaFiles(final Long id) {
+    public List<UploadFileDtoRs> downloadListMetaFiles(final Long id) {
         return webClient.get()
             .uri(uriBuilder -> uriBuilder.pathSegment("api", "v1", "files", "meta", String.valueOf(id))
                 .build())

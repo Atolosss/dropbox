@@ -21,7 +21,7 @@ tags:
 #components:
 #  schemas:
 #    UserRegistrationRq: { $ref: "./schemas/user/UserRegistrationRq.yml" }
-#    UserFileUploadRq: { $ref: "./schemas/user/FileUploadRq.yml" }
+#    UserFileUploadRq: { $ref: "./schemas/user/UploadFileDtoRq.yml" }
 paths:
   /api/v1/users:
     $ref: "./paths/user.yml"

@@ -2,7 +2,7 @@ package com.dropbox.controller;
 
 import com.dropbox.controller.openapi.FileApi;
 import com.dropbox.model.openapi.FileRs;
-import com.dropbox.model.openapi.FileUploadRq;
+import com.dropbox.model.openapi.UploadFileDtoRq;
 import com.dropbox.model.openapi.UploadFileDtoRs;
 import com.dropbox.service.FileService;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +16,8 @@ public class FileController implements FileApi {
     private final FileService fileService;
 
     @Override
-    public ResponseEntity<FileRs> createFile(final FileUploadRq fileUploadRq) {
-        return ResponseEntity.ok(fileService.createFile(fileUploadRq));
+    public ResponseEntity<FileRs> createFile(final UploadFileDtoRq uploadFileDtoRq) {
+        return ResponseEntity.ok(fileService.createFile(uploadFileDtoRq));
     }
 
     @Override

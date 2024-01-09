@@ -1,16 +1,8 @@
 type: object
 properties:
-  id:
-    type: integer
-    format: int64
-    example: 123
   name:
     type: string
     example: file.txt
-  url:
+  key:
     type: string
-    example: s3://bucket/file.txt
-  type:
-    type: string
-    "enum": [ "PDF", "DOC", "XLSX" ]
-    example: s3://bucket/file.txt
+    example: 658d7ebaf94ef911c60f2a6d

@@ -1,6 +1,7 @@
 package com.dropbox.bot;
 
-import com.dropbox.model.entity.User;
+import com.dropbox.controller.UserController;
+import com.dropbox.model.openapi.UserRegistrationRq;
 import com.dropbox.repository.UserRepository;
 import com.dropbox.service.FileService;
 import org.slf4j.Logger;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -25,12 +27,15 @@ public class SntBot extends TelegramLongPollingBot {
     private static final Logger LOG = LoggerFactory.getLogger(SntBot.class);
     private static final String BEGIN = "/start";
     @Autowired
+    private final UserController userController;
+    @Autowired
     private final UserRepository userRepository;
     @Autowired
     private final FileService fileService;
 
-    public SntBot(@Value("${telegram.bot.token}") final String botToken, final UserRepository userRepository, final FileService fileService) {
+    public SntBot(@Value("${telegram.bot.token}") final String botToken, UserController userController, final UserRepository userRepository, final FileService fileService) {
         super(botToken);
+        this.userController = userController;
         this.userRepository = userRepository;
         this.fileService = fileService;
     }
@@ -45,16 +50,11 @@ public class SntBot extends TelegramLongPollingBot {
         final List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
 
         final List<InlineKeyboardButton> rowInline1 = new ArrayList<>();
-        final InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton();
-        inlineKeyboardButton1.setText("Регистрация \n пользователя");
-        inlineKeyboardButton1.setCallbackData("РЕГИСТРАЦИЯ");
-
-        InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton();
-        inlineKeyboardButton2.setText("Сообщить о проблеме");
-        inlineKeyboardButton2.setCallbackData("ПРОБЛЕМА");
+        InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton();
+        inlineKeyboardButton1.setText("Сообщить о проблеме");
+        inlineKeyboardButton1.setCallbackData("ПРОБЛЕМА");
 
         rowInline1.add(inlineKeyboardButton1);
-        rowInline1.add(inlineKeyboardButton2);
 
         final List<InlineKeyboardButton> rowInline2 = new ArrayList<>();
         final InlineKeyboardButton inlineKeyboardButton21 = new InlineKeyboardButton();
@@ -78,37 +78,40 @@ public class SntBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(final Update update) {
-        if (update.hasMessage() || update.getMessage().hasText()) {
-
-            final var message = update.getMessage().getText();
-            final var chatId = update.getMessage().getChatId();
-
-            switch (message) {
-                case BEGIN -> {
-                    final String userName = update.getMessage().getChat().getUserName();
-                    startCommand(chatId, userName);
-                    registrationUser(update.getMessage());
-
-                    try {
-                        execute(hermitageInlineKeyboardAb(chatId));
-                    } catch (TelegramApiException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-                default -> {
-                    final String userName = update.getMessage().getChat().getUserName();
-                    startCommand(chatId, userName);
-                }
-            }
+        if (update.hasMessage() && update.getMessage().hasText()) {
+            handleMessage(update.getMessage());
         } else if (update.hasCallbackQuery()) {
-            String callData = update.getCallbackQuery().getData();
-            long chatId = update.getCallbackQuery().getMessage().getChatId();
+            handleCallbackQuery(update.getCallbackQuery());
+        }
+    }
 
-            if (callData.equals("РЕГИСТРАЦИЯ")) {
-                sendMessage(chatId, "может быть");
-            } else if (callData.equals("ПРОБЛЕМА")) {
-                sendMessage(chatId, "парам па па");
-            }
+    private void handleMessage(final Message message) {
+        Long chatId = message.getChatId();
+        String userName = message.getChat().getUserName();
+        String text = message.getText();
+
+        switch (text) {
+            case BEGIN:
+                startCommand(chatId, userName);
+                registrationUser(message);
+                try {
+                    execute(hermitageInlineKeyboardAb(chatId));
+                } catch (TelegramApiException e) {
+                    throw new RuntimeException(e);
+                }
+                break;
+            default:
+                sendMessage(chatId,"Что то пошло не так");
+                break;
+        }
+    }
+
+    private void handleCallbackQuery(final CallbackQuery callbackQuery) {
+        String callData = callbackQuery.getData();
+        long chatId = callbackQuery.getMessage().getChatId();
+
+        if ("ПРОБЛЕМА".equals(callData)) {
+            sendMessage(chatId, "парам па па");
         }
     }
 
@@ -117,13 +120,10 @@ public class SntBot extends TelegramLongPollingBot {
             var chatId = msg.getChatId();
             var chat = msg.getChat();
 
-            FileUploadRq
-
-            userRepository.save(User.builder()
+            userController.createUser(UserRegistrationRq.builder()
                 .telegramUserId(chatId)
                 .firstName(chat.getFirstName())
                 .lastName(chat.getLastName())
-                .isActive(true)
                 .build());
         }
     }

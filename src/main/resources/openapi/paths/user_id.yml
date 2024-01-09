@@ -1,36 +1,4 @@
-patch:
-  tags:
-    - user
-  summary: Patch user
-  description: Patch User in bd
-  operationId: patchUser
-  parameters:
-    - name: id
-      in: path
-      description: 'The id that needs to be fetched. Use 123 for example. '
-      required: true
-      schema:
-        type: integer
-        format: int64
-      example: 657
-  requestBody:
-    description: Patch user object
-    content:
-      '*/*':
-        schema:
-          $ref: '../schemas/user/UserPatchRq.yml'
-    required: true
-  responses:
-    200:
-      description: Success
-      content:
-        application/json:
-          schema:
-            $ref: '../schemas/user/UserPatchRs.yml'
-    500:
-      description: Something went wrong
-      content:
-        application/json: { }
+
 delete:
   tags:
     - user

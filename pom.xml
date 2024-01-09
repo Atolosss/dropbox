@@ -82,7 +82,6 @@
             <artifactId>mapstruct</artifactId>
             <version>${mapstruct.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>postgresql</artifactId>
@@ -243,5 +242,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
