@@ -20,6 +20,7 @@ public class DataProvider {
             .lastName("komar")
             .firstName("max");
     }
+
     public static UploadFileDtoRq.UploadFileDtoRqBuilder prepareFileUploadRq(final Long id) {
         return UploadFileDtoRq.builder()
             .name("How make doc")

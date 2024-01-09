@@ -31,11 +31,6 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    public List<UserRs> getAllUsers() {
-        final List<User> users = userRepository.findAll();
-        return userMapper.toUserRsList(users);
-    }
-
     public UserRs getUser(final Long id) {
         final User user = userRepository.findById(id).orElseThrow(() -> new ServiceException(ErrorCode.ERR_CODE_002, "User with this id %s not found"));
         return userMapper.toUserRs(user);

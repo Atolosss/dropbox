@@ -3,7 +3,6 @@ package com.dropbox.bot;
 import com.dropbox.controller.UserController;
 import com.dropbox.model.openapi.UserRegistrationRq;
 import com.dropbox.repository.UserRepository;
-import com.dropbox.service.FileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,14 +29,11 @@ public class SntBot extends TelegramLongPollingBot {
     private final UserController userController;
     @Autowired
     private final UserRepository userRepository;
-    @Autowired
-    private final FileService fileService;
 
-    public SntBot(@Value("${telegram.bot.token}") final String botToken, UserController userController, final UserRepository userRepository, final FileService fileService) {
+    public SntBot(@Value("${telegram.bot.token}") final String botToken, final UserController userController, final UserRepository userRepository) {
         super(botToken);
         this.userController = userController;
         this.userRepository = userRepository;
-        this.fileService = fileService;
     }
 
     public static SendMessage hermitageInlineKeyboardAb(final long chatId) {
@@ -101,7 +97,7 @@ public class SntBot extends TelegramLongPollingBot {
                 }
                 break;
             default:
-                sendMessage(chatId,"Что то пошло не так");
+                sendMessage(chatId, "Что то пошло не так");
                 break;
         }
     }

@@ -4,19 +4,14 @@ properties:
     type: integer
     format: int64
     example: 123
-  email:
-    type: string
-    example: example@mail.ru
+  telegramUserId:
+    type: integer
+    format: int64
+    example: 123
   firstName:
     type: string
     example: masha
   lastName:
     type: string
     example: ivanov
-  dateOfBirth:
-    type: string
-    example: 16.05.1995
-  files:
-      type: array
-      items:
-        $ref: "../user/FileRs.yml"
+

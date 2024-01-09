@@ -51,8 +51,8 @@ public class FileService {
         return fileStorageClient.downloadListMetaFiles(chatId).stream().map(UploadFileDtoRs::getName).toList();
     }
 
-    public List<UploadFileDtoRs> getFiles(final Long chatId) {
-        return null;
-    }
+//  public List<UploadFileDtoRs> getFiles(final Long chatId) {
+//      return null;
+//  }
 
 }

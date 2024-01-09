@@ -1,106 +1,35 @@
 package com.dropbox.controller;
 
 import com.dropbox.model.entity.User;
-import com.dropbox.support.DataProvider;
-import com.dropbox.support.IntegrationTestBase;
 import com.dropbox.model.openapi.UserRegistrationRq;
 import com.dropbox.model.openapi.UserRegistrationRs;
+import com.dropbox.model.openapi.UserRs;
+import com.dropbox.support.DataProvider;
+import com.dropbox.support.IntegrationTestBase;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@
+@Testcontainers
 class UserControllerTest extends IntegrationTestBase {
 
     public static final String API = "api";
     public static final String V_1 = "v1";
     public static final String USERS = "users";
-    public static final String FILES = "files";
 
     @Test
     void postUserShouldWork() {
         final UserRegistrationRq userRegistrationRq = DataProvider.prepareUserRegistrationRq().build();
 
-        final UserRegistrationRs userRegistrationRs = postUser(userRegistrationRq, 200);
-        assertThat(userRegistrationRs).isNotNull();
-        assertThat(userRepository.;
-    }
-
-    @Test
-    void getAllUsersShouldWork() {
-        final User user = DataProvider.prepareUser().build();
-        createUser(user);
-
-        assertThat(getAllUsers())
+        assertThat(postUser(userRegistrationRq, 200)).isNotNull();
+        assertThat(userRepository.findUserByTelegramUserId(userRegistrationRq.getTelegramUserId()).get())
             .usingRecursiveComparison()
-            .ignoringFields("lastName", "firstName", "dateOfBirth", FILES)
-            .isEqualTo(List.of(UserRs.builder()
-                .id(user.getId())
-                .email(user.getEmail())
-                .build()));
-    }
-
-    @Test
-    void getUserFilesShouldWork() {
-        createUserAndFile();
-        final User user = userRepository.findAll().stream()
-            .findFirst().orElseThrow();
-        assertThat(getUserFiles(user.getId()))
-            .usingRecursiveComparison()
-            .ignoringFields("id", "fileType", "url", "userId")
-            .isEqualTo(List.of(FileRs.builder()
-                .name("How make doc")));
-    }
-
-    private List<FileRs> getUserFiles(final String id) {
-        return webTestClient.get()
-            .uri(uriBuilder -> uriBuilder
-                .pathSegment(API, V_1, USERS, id, FILES)
-                .build())
-            .exchange()
-            .expectStatus().isEqualTo(200)
-            .expectBody(new ParameterizedTypeReference<List<FileRs>>() {
-            })
-            .returnResult()
-            .getResponseBody();
-    }
-
-    private List<UserRs> getAllUsers() {
-        return webTestClient.get()
-            .uri(uriBuilder -> uriBuilder
-                .pathSegment(API, V_1, USERS)
-                .build())
-            .exchange()
-            .expectStatus().isEqualTo(200)
-            .expectBody(new ParameterizedTypeReference<List<UserRs>>() {
-            })
-            .returnResult()
-            .getResponseBody();
-    }
-
-    @Test
-    void patchUserShouldWork() {
-        final User user = DataProvider.prepareUser().build();
-        createUser(user);
-        final UserPatchRq userPatchRq = DataProvider.prepareUserPatchRq().build();
-
-        assertThat(patchUser(userPatchRq, user.getId()))
-            .isNotNull();
-        assertThat(userRepository.findById(user.getId()))
-            .isNotEmpty()
-            .get()
-            .usingRecursiveComparison()
-            .ignoringFields("createDateTime", "updateDateTime", "dateOfBirth")
+            .ignoringFields("id", "createDateTime")
             .isEqualTo(User.builder()
-                .id(user.getId())
-                .email(user.getEmail())
-                .files(List.of())
-                .lastName(userPatchRq.getLastName())
-                .firstName(userPatchRq.getFirstName())
-                .build());
-
+                .telegramUserId(userRegistrationRq.getTelegramUserId())
+                .firstName(userRegistrationRq.getFirstName())
+                .lastName(userRegistrationRq.getLastName()).build());
     }
 
     @Test
@@ -120,17 +49,17 @@ class UserControllerTest extends IntegrationTestBase {
 
         assertThat(getUser(user.getId()))
             .usingRecursiveComparison()
-            .ignoringFields("lastName", "firstName", "dateOfBirth", FILES)
+            .ignoringFields("id", "telegramUserId")
             .isEqualTo(UserRs.builder()
-                .id(user.getId())
-                .email(user.getEmail())
+                .lastName(user.getLastName())
+                .firstName(user.getFirstName())
                 .build());
     }
 
-    private UserRs getUser(final String id) {
+    private UserRs getUser(final Long id) {
         return webTestClient.get()
             .uri(uriBuilder -> uriBuilder
-                .pathSegment(API, V_1, USERS, id)
+                .pathSegment(API, V_1, USERS, String.valueOf(id))
                 .build())
             .exchange()
             .expectStatus().isEqualTo(200)
@@ -139,10 +68,10 @@ class UserControllerTest extends IntegrationTestBase {
             .getResponseBody();
     }
 
-    private void deleteUser(final String id) {
+    private void deleteUser(final Long id) {
         webTestClient.delete()
             .uri(uriBuilder -> uriBuilder
-                .pathSegment(API, V_1, USERS, id)
+                .pathSegment(API, V_1, USERS, String.valueOf(id))
                 .build())
             .exchange()
             .expectStatus().isEqualTo(200);
@@ -161,15 +90,4 @@ class UserControllerTest extends IntegrationTestBase {
             .getResponseBody();
     }
 
-    private UserPatchRs patchUser(final UserPatchRq request, final String id) {
-        return webTestClient.patch()
-            .uri(uriBuilder -> uriBuilder
-                .pathSegment(API, V_1, USERS, id)
-                .build())
-            .bodyValue(request)
-            .exchange()
-            .expectBody(UserPatchRs.class)
-            .returnResult()
-            .getResponseBody();
-    }
 }

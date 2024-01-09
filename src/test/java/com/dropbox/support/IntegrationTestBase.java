@@ -37,7 +37,7 @@ public class IntegrationTestBase extends DatabaseAwareTestBase {
 
     @Override
     protected Set<String> getTables() {
-        return Set.of("file", "users");
+        return Set.of("users");
     }
 
     protected void createUser(final User user) {
