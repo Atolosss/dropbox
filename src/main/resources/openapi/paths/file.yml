@@ -22,3 +22,27 @@ post:
       description: User not found exception
       content:
         application/json: { }
+get:
+  tags:
+    - file
+  description: Get file in bd
+  operationId: getFile
+  parameters:
+    - name: id
+      in: path
+      description: 'User id from FileBinaryData Mongo collection'
+      required: true
+      schema:
+        type: string
+      example: 658d7ebaf94ef911c60f2a6d
+  responses:
+    200:
+      description: Success
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/user/UploadFileDtoRs.yml'
+    404:
+      description: File not found
+      content:
+        application/json: { }

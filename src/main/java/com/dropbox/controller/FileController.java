@@ -1,6 +1,7 @@
 package com.dropbox.controller;
 
 import com.dropbox.controller.openapi.FileApi;
+import com.dropbox.model.openapi.FileMetaRs;
 import com.dropbox.model.openapi.FileRs;
 import com.dropbox.model.openapi.UploadFileDtoRq;
 import com.dropbox.model.openapi.UploadFileDtoRs;
@@ -8,6 +9,8 @@ import com.dropbox.service.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,4 +28,8 @@ public class FileController implements FileApi {
         return ResponseEntity.ok(fileService.getFile(id));
     }
 
+    @Override
+    public ResponseEntity<List<FileMetaRs>> getFiles(final Long id) {
+        return ResponseEntity.ok(fileService.getListMetaFiles(id));
+    }
 }

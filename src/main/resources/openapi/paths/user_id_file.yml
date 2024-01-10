@@ -1,8 +1,8 @@
 get:
   tags:
-    - user
+    - file
   summary: Get user files
-  operationId: getUserFiles
+  operationId: getFiles
   parameters:
     - name: id
       in: path
@@ -18,7 +18,7 @@ get:
       content:
         application/json:
           schema:
-            $ref: '../schemas/user/FileRsList.yml'
+            $ref: '../schemas/user/FileMetaRsList.yml'
     404:
       description: User not found exception
       content:

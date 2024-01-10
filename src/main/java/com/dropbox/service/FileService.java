@@ -5,6 +5,7 @@ import com.dropbox.constant.ErrorCode;
 import com.dropbox.exceptions.ServiceException;
 import com.dropbox.mapper.FileMapper;
 import com.dropbox.model.dto.UploadFileRs;
+import com.dropbox.model.openapi.FileMetaRs;
 import com.dropbox.model.openapi.FileRs;
 import com.dropbox.model.openapi.UploadFileDtoRq;
 import com.dropbox.model.openapi.UploadFileDtoRs;
@@ -47,8 +48,8 @@ public class FileService {
         }
     }
 
-    public List<String> getListMetaFiles(final Long chatId) {
-        return fileStorageClient.downloadListMetaFiles(chatId).stream().map(UploadFileDtoRs::getName).toList();
+    public List<FileMetaRs> getListMetaFiles(final Long chatId) {
+        return fileStorageClient.downloadListMetaFiles(chatId).stream().map(fileMapper::toFileMetaRs).toList();
     }
 
 }

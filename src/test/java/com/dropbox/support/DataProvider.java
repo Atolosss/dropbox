@@ -24,7 +24,7 @@ public class DataProvider {
     public static UploadFileDtoRq.UploadFileDtoRqBuilder prepareFileUploadRq(final Long id) {
         return UploadFileDtoRq.builder()
             .name("How make doc")
-            .fileData("123")
+            .base64Data("123")
             .userId(id);
     }
 

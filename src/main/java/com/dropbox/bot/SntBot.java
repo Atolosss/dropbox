@@ -1,8 +1,10 @@
 package com.dropbox.bot;
 
 import com.dropbox.controller.UserController;
+import com.dropbox.model.openapi.FileMetaRs;
 import com.dropbox.model.openapi.UserRegistrationRq;
 import com.dropbox.repository.UserRepository;
+import com.dropbox.service.FileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,11 +31,14 @@ public class SntBot extends TelegramLongPollingBot {
     private final UserController userController;
     @Autowired
     private final UserRepository userRepository;
+    @Autowired
+    private final FileService fileService;
 
-    public SntBot(@Value("${telegram.bot.token}") final String botToken, final UserController userController, final UserRepository userRepository) {
+    public SntBot(@Value("${telegram.bot.token}") final String botToken, final UserController userController, final UserRepository userRepository, final FileService fileService) {
         super(botToken);
         this.userController = userController;
         this.userRepository = userRepository;
+        this.fileService = fileService;
     }
 
     public static SendMessage hermitageInlineKeyboardAb(final long chatId) {
@@ -108,6 +113,11 @@ public class SntBot extends TelegramLongPollingBot {
 
         if ("ПРОБЛЕМА".equals(callData)) {
             sendMessage(chatId, "парам па па");
+        } else if ("ОБРАЩЕНИЯ".equals(callData)) {
+            List<FileMetaRs> files = fileService.getListMetaFiles(chatId);
+            for (FileMetaRs f : files) {
+                sendMessage(chatId, f.getName());
+            }
         }
     }
 
@@ -116,11 +126,7 @@ public class SntBot extends TelegramLongPollingBot {
             var chatId = msg.getChatId();
             var chat = msg.getChat();
 
-            userController.createUser(UserRegistrationRq.builder()
-                .telegramUserId(chatId)
-                .firstName(chat.getFirstName())
-                .lastName(chat.getLastName())
-                .build());
+            userController.createUser(UserRegistrationRq.builder().telegramUserId(chatId).firstName(chat.getFirstName()).lastName(chat.getLastName()).build());
         }
     }
 
