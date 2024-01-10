@@ -7,6 +7,7 @@ import com.dropbox.model.openapi.UserRs;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 
 import java.util.List;
 
@@ -23,11 +24,10 @@ public interface UserMapper {
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "firstName", source = "firstName")
     @Mapping(target = "lastName", source = "lastName")
+    @Mapping(target = "id", source = "id")
     UserRegistrationRs toUserRegistrationRs(User inserted);
 
-    @BeanMapping(ignoreByDefault = true)
-    @Mapping(target = "firstName", source = "firstName")
-    @Mapping(target = "lastName", source = "lastName")
+    @Named("toUserRsList")
     List<UserRs> toUserRsList(List<User> users);
 
     @BeanMapping(ignoreByDefault = true)

@@ -2,7 +2,7 @@ type: object
 required:
   - name
   - userId
-  - fileDataBase64
+  - base64Data
 properties:
   name:
     type: string
@@ -11,7 +11,7 @@ properties:
     type: integer
     format: int64
     example: 550
-  fileData:
+  base64Data:
     type: string
     example: 0J7QsdGJ0LjQtSDQv9GA0LDQstC40LvQsDoKMS4g0JLQsNC70L
 
