@@ -2,15 +2,18 @@ package com.dropbox.bot;
 
 import com.dropbox.controller.UserController;
 import com.dropbox.model.openapi.FileMetaRs;
+import com.dropbox.model.openapi.FileRs;
+import com.dropbox.model.openapi.UploadFileDtoRq;
 import com.dropbox.model.openapi.UserRegistrationRq;
 import com.dropbox.repository.UserRepository;
 import com.dropbox.service.FileService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -19,13 +22,17 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.io.File;
+import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 @Component
+@Slf4j
 public class SntBot extends TelegramLongPollingBot {
+//    refactor service bot
 
-    private static final Logger LOG = LoggerFactory.getLogger(SntBot.class);
     private static final String BEGIN = "/start";
     @Autowired
     private final UserController userController;
@@ -77,8 +84,22 @@ public class SntBot extends TelegramLongPollingBot {
         return message;
     }
 
+    @SneakyThrows
     @Override
     public void onUpdateReceived(final Update update) {
+        String fileId = update.getMessage().getPhoto().get(0).getFileId();
+        GetFile getFile = new GetFile(fileId);
+        String filePath = execute(getFile).getFilePath();
+        File downloadFile = downloadFile(filePath);
+        byte[] fileContent = Files.readAllBytes(downloadFile.toPath());
+        String encoded = Base64.getEncoder().encodeToString(fileContent);
+        UploadFileDtoRq uploadFileDtoRq = UploadFileDtoRq.builder()
+            .name(getFile.getFileId())
+            .userId(2L)
+            .base64Data(encoded)
+            .build();
+        FileRs fileRs = fileService.createFile(uploadFileDtoRq);
+        log.info(fileRs.toString());
         if (update.hasMessage() && update.getMessage().hasText()) {
             handleMessage(update.getMessage());
         } else if (update.hasCallbackQuery()) {
@@ -152,7 +173,7 @@ public class SntBot extends TelegramLongPollingBot {
         try {
             execute(sendMessage);
         } catch (TelegramApiException e) {
-            LOG.error("Ошибка отправки сообщения", e);
+            log.error("Ошибка отправки сообщения", e);
         }
     }
 

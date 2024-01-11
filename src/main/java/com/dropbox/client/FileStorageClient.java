@@ -42,9 +42,10 @@ public class FileStorageClient {
             .block();
     }
 
-    public List<UploadFileDtoRs> downloadListMetaFiles(final Long id) {
+    public List<UploadFileDtoRs> getFileListByUserId(final Long userId) {
         return webClient.get()
-            .uri(uriBuilder -> uriBuilder.pathSegment("api", "v1", "files", "meta", String.valueOf(id))
+            .uri(uriBuilder -> uriBuilder.pathSegment("api", "v1", "files")
+                .queryParam(String.valueOf(userId))
                 .build())
             .accept(MediaType.APPLICATION_JSON)
             .retrieve()

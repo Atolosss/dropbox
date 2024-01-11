@@ -49,7 +49,7 @@ public class FileService {
     }
 
     public List<FileMetaRs> getListMetaFiles(final Long chatId) {
-        return fileStorageClient.downloadListMetaFiles(chatId).stream().map(fileMapper::toFileMetaRs).toList();
+        return fileStorageClient.getFileListByUserId(chatId).stream().map(fileMapper::toFileMetaRs).toList();
     }
 
 }
