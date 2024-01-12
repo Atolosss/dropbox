@@ -23,7 +23,7 @@ class UserControllerTest extends IntegrationTestBase {
         final UserRegistrationRq userRegistrationRq = DataProvider.prepareUserRegistrationRq().build();
 
         assertThat(postUser(userRegistrationRq, 200)).isNotNull();
-        assertThat(userRepository.findUserByTelegramUserId(userRegistrationRq.getTelegramUserId()).get())
+        assertThat(userRepository.findUserByTelegramUserId(userRegistrationRq.getTelegramUserId()))
             .usingRecursiveComparison()
             .ignoringFields("id", "createDateTime")
             .isEqualTo(User.builder()

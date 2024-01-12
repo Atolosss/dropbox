@@ -54,15 +54,4 @@ public class FileStorageClient {
             .block();
     }
 
-    public DataBuffer downloadFiles(final Long id) {
-        return webClient.get()
-            .uri(uriBuilder -> uriBuilder.pathSegment("api", "v1", "files", "binary", String.valueOf(id))
-                .build())
-            .accept(MediaType.APPLICATION_JSON)
-            .exchangeToFlux(clientResponse -> clientResponse.body(BodyExtractors.toDataBuffers()))
-            .transform(DataBufferUtils::join)
-            .as(Mono::from)
-            .block();
-    }
-
 }

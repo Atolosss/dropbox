@@ -4,8 +4,8 @@ import com.dropbox.client.FileStorageClient;
 import com.dropbox.constant.ErrorCode;
 import com.dropbox.exceptions.ServiceException;
 import com.dropbox.mapper.FileMapper;
+import com.dropbox.mapper.UserMapper;
 import com.dropbox.model.dto.UploadFileRs;
-import com.dropbox.model.openapi.FileMetaRs;
 import com.dropbox.model.openapi.FileRs;
 import com.dropbox.model.openapi.UploadFileDtoRq;
 import com.dropbox.model.openapi.UploadFileDtoRs;
@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Base64;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +27,7 @@ public class FileService {
     private final FileMapper fileMapper;
     private final UserRepository userRepository;
     private final FileStorageClient fileStorageClient;
+    private final UserMapper userMapper;
 
     public FileRs createFile(final UploadFileDtoRq uploadFileDtoRq) {
         if (!userRepository.existsById(uploadFileDtoRq.getUserId())) {
@@ -35,6 +35,7 @@ public class FileService {
         }
 
         final UploadFileRs uploadFileRs = fileStorageClient.uploadFile(uploadFileDtoRq);
+        userRepository.findUserByTelegramUserId(uploadFileDtoRq.getUserId());
         return fileMapper.toFileRs(uploadFileDtoRq, uploadFileRs);
     }
 
@@ -46,10 +47,6 @@ public class FileService {
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
-    }
-
-    public List<FileMetaRs> getListMetaFiles(final Long chatId) {
-        return fileStorageClient.getFileListByUserId(chatId).stream().map(fileMapper::toFileMetaRs).toList();
     }
 
 }

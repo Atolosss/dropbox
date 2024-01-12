@@ -27,8 +27,6 @@ paths:
     $ref: "./paths/user.yml"
   /api/v1/users/{id}:
     $ref: "./paths/user_id.yml"
-  /api/v1/users/{id}/files:
-    $ref: "./paths/user_id_file.yml"
   /api/v1/files:
     $ref: "./paths/file.yml"
   /api/v1/files/{id}:

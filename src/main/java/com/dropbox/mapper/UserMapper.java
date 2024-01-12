@@ -34,4 +34,5 @@ public interface UserMapper {
     @Mapping(target = "firstName", source = "firstName")
     @Mapping(target = "lastName", source = "lastName")
     UserRs toUserRs(User user);
+
 }

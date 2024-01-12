@@ -1,7 +1,6 @@
 package com.dropbox.mapper;
 
 import com.dropbox.model.dto.UploadFileRs;
-import com.dropbox.model.openapi.FileMetaRs;
 import com.dropbox.model.openapi.FileRs;
 import com.dropbox.model.openapi.UploadFileDtoRq;
 import com.dropbox.model.openapi.UploadFileDtoRs;
@@ -23,7 +22,4 @@ public interface FileMapper {
             .build();
     }
 
-    @BeanMapping(ignoreByDefault = true)
-    @Mapping(target = "name", source = "uploadFileDtoRs.name")
-    FileMetaRs toFileMetaRs(UploadFileDtoRs uploadFileDtoRs);
 }
