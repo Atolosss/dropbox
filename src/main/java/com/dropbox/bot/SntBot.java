@@ -2,6 +2,7 @@ package com.dropbox.bot;
 
 import com.dropbox.bot.enums.Buttons;
 import com.dropbox.controller.UserController;
+import com.dropbox.model.entity.UserFile;
 import com.dropbox.model.openapi.FileRs;
 import com.dropbox.model.openapi.UploadFileDtoRq;
 import com.dropbox.model.openapi.UserRegistrationRq;
@@ -26,6 +27,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Base64;
+import java.util.List;
 
 import static com.dropbox.bot.support.Keyboard.hermitageInlineKeyboardAb;
 
@@ -53,13 +55,14 @@ public class SntBot extends TelegramLongPollingBot {
 
     private void getFile(final Message message) throws TelegramApiException, IOException {
         final String fileId = message.getPhoto().get(0).getFileId();
-        final String filePath = getFilePath(message.getPhoto().get(0).getFileId());
+        final String fileCaptcha = message.getCaption();
+        final String filePath = getFilePath(fileId);
         final byte[] fileContent = downloadFileContent(filePath);
         final String encodedFile = encodeFileToBase64(fileContent);
 
         final UploadFileDtoRq uploadFileDtoRq = UploadFileDtoRq.builder()
-            .name(fileId)
-            .userId(2L)
+            .name(fileCaptcha)
+            .userId(message.getFrom().getId())
             .base64Data(encodedFile)
             .build();
 
@@ -140,11 +143,11 @@ public class SntBot extends TelegramLongPollingBot {
 
     public void registrationUser(final Message msg) {
         if (userRepository.findUserByTelegramUserId(msg.getChatId()) == null) {
-            var chatId = msg.getChatId();
+            var userId = msg.getFrom().getId();
             var chat = msg.getChat();
 
             userController.createUser(UserRegistrationRq.builder()
-                .telegramUserId(chatId)
+                .telegramUserId(userId)
                 .firstName(chat.getFirstName())
                 .lastName(chat.getLastName())
                 .build());
@@ -172,11 +175,28 @@ public class SntBot extends TelegramLongPollingBot {
     public void callbackQueryHandler(final CallbackQuery callbackQuery) throws TelegramApiException {
         final String callData = callbackQuery.getData();
         final long chatId = callbackQuery.getMessage().getChatId();
+        final Long userId = callbackQuery.getFrom().getId();
 
         if (Buttons.BUTTON_01.getCallback().equals(callData)) {
             sendMessage(chatId, "Отправьте фотографию и опишите проблему");
         } else if (Buttons.BUTTON_02.getCallback().equals(callData)) {
             sendMessage(chatId, "Направляю вам список обращений: ");
+            if (!userRepository.findUserByTelegramUserId(userId).getFiles().isEmpty()) {
+                final List<UserFile> files = userRepository.findUserByTelegramUserId(userId).getFiles();
+                for (UserFile f : files) {
+                    sendMessage(chatId, fileService.getFile(f.getKey()).getName());
+                }
+            }
+            sendMessage(chatId, "От вас обращений пока не поступало");
+        } else if (Buttons.BUTTON_03.getCallback().equals(callData)) {
+            sendMessage(chatId, "Направляю вам фотографии обращений: ");
+            if (!userRepository.findUserByTelegramUserId(chatId).getFiles().isEmpty()) {
+                final List<UserFile> keys = userRepository.findUserByTelegramUserId(userId).getFiles();
+                for (UserFile k : keys) {
+                    sendFiles(chatId, fileService.getFile(k.getKey()).getBase64());
+                }
+            }
+            sendMessage(chatId, "От вас обращений пока не поступало");
         }
     }
 }

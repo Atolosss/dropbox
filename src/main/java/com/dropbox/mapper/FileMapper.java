@@ -1,6 +1,8 @@
 package com.dropbox.mapper;
 
 import com.dropbox.model.dto.UploadFileRs;
+import com.dropbox.model.entity.User;
+import com.dropbox.model.entity.UserFile;
 import com.dropbox.model.openapi.FileRs;
 import com.dropbox.model.openapi.UploadFileDtoRq;
 import com.dropbox.model.openapi.UploadFileDtoRs;
@@ -22,4 +24,9 @@ public interface FileMapper {
             .build();
     }
 
+    @BeanMapping(ignoreByDefault = true)
+    @Mapping(target = "key", source = "uploadFileRs.key")
+    @Mapping(target = "user", source = "user")
+    @Mapping(target = "description", source = "uploadFileDtoRq.name")
+    UserFile toUserFile(UploadFileDtoRq uploadFileDtoRq, UploadFileRs uploadFileRs, User user);
 }
