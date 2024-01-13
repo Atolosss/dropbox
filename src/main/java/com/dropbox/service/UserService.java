@@ -22,7 +22,6 @@ public class UserService {
         final User inserted = userRepository.save(userMapper.toUser(userRegistrationRq));
         return userMapper.toUserRegistrationRs(inserted);
     }
-
     public void deleteUser(final Long id) {
         final User user = userRepository.findById(id)
             .orElseThrow();
