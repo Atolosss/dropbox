@@ -1,14 +1,14 @@
 package com.dropbox.bot;
 
 import com.dropbox.bot.enums.Buttons;
-import com.dropbox.bot.handlers.UserRegistrationHandler;
 import com.dropbox.configuration.TelegramBotConfiguration;
+import com.dropbox.constant.ErrorCode;
+import com.dropbox.constant.Messages;
 import com.dropbox.model.entity.User;
 import com.dropbox.model.entity.UserFile;
-import com.dropbox.model.openapi.FileRs;
-import com.dropbox.model.openapi.UploadFileDtoRq;
 import com.dropbox.repository.UserRepository;
 import com.dropbox.service.FileService;
+import com.dropbox.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -29,24 +29,24 @@ import java.nio.file.Files;
 import java.util.Base64;
 import java.util.List;
 
-import static com.dropbox.bot.support.Keyboard.hermitageInlineKeyboardAb;
+import static com.dropbox.bot.support.Keyboard.prepareKeyBoardSendMessage;
 
 @Component
 @Slf4j
 public class SntBot extends TelegramLongPollingBot {
     private final FileService fileService;
-    private final UserRegistrationHandler userRegistrationHandler;
+    private final UserService userService;
     private final UserRepository userRepository;
     private final TelegramBotConfiguration telegramBotConfiguration;
 
     public SntBot(final TelegramBotConfiguration telegramBotConfiguration,
                   final FileService fileService,
-                  final UserRegistrationHandler userRegistrationHandler,
+                  final UserService userService,
                   final UserRepository userRepository) {
         super(telegramBotConfiguration.getToken());
 
         this.fileService = fileService;
-        this.userRegistrationHandler = userRegistrationHandler;
+        this.userService = userService;
         this.userRepository = userRepository;
         this.telegramBotConfiguration = telegramBotConfiguration;
     }
@@ -63,7 +63,7 @@ public class SntBot extends TelegramLongPollingBot {
         } else if (update.hasCallbackQuery()) {
             callbackQuery(update.getCallbackQuery());
         } else if (update.hasMessage() && update.getMessage().hasPhoto()) {
-            getFile(update.getMessage());
+            downloadFileProcess(update.getMessage());
         }
     }
 
@@ -77,30 +77,25 @@ public class SntBot extends TelegramLongPollingBot {
         return Files.readAllBytes(downloadFile.toPath());
     }
 
-    public void getFile(final Message message) {
+    private void downloadFileProcess(final Message message) {
         try {
-            final String fileId = message.getPhoto().get(0).getFileId();
-            final String fileCaptcha = message.getCaption();
-            final String filePath = getFilePath(fileId);
+            final String filePath = getFilePath(message.getPhoto().get(0).getFileId());
             final byte[] fileContent = downloadFileContent(filePath);
-            final String encodedFile = Base64.getEncoder().encodeToString(fileContent);
-
-            final UploadFileDtoRq uploadFileDtoRq = UploadFileDtoRq.builder()
-                .name(fileCaptcha)
-                .userId(message.getFrom().getId())
-                .base64Data(encodedFile)
-                .build();
-            if (fileCaptcha != null) {
-                final FileRs fileRs = fileService.createFile(uploadFileDtoRq);
-                log.info(fileRs.toString());
-                sendMessage(message.getChatId(), "Ваше обращение принято, могу ли я вам еще чем нибудь помочь? Напишите в чат да или нет");
-            } else {
-                sendMessage(message.getChatId(), "Требуется описать проблему!");
-            }
+            sendMessage(message.getChatId(), fileService.uploadFile(message, fileContent));
         } catch (TelegramApiException | IOException e) {
             log.error(e.getMessage(), e);
         }
+    }
 
+    private void startProcess(Message message) {
+        sendText(message.getChatId(), message.getChat().getUserName());
+        userService.registrationUser(message);
+        try {
+            execute(prepareKeyBoardSendMessage(message.getChatId()));
+        } catch (TelegramApiException e) {
+            log.error(ErrorCode.ERR_CODE_003.getDescription(), e);
+            sendMessage(message.getChatId(), ErrorCode.ERR_CODE_003.getDescription());
+        }
     }
 
     public void sendFiles(final Long chatId, final String k) {
@@ -109,11 +104,10 @@ public class SntBot extends TelegramLongPollingBot {
 
             if (fileContent != null) {
                 try (InputStream is = new ByteArrayInputStream(fileContent)) {
-                    SendPhoto sendPhoto = new SendPhoto();
-                    sendPhoto.setChatId(chatId);
-                    sendPhoto.setPhoto(new InputFile(is, "send.jpg"));
-
-                    execute(sendPhoto);
+                    execute(SendPhoto.builder()
+                        .chatId(chatId)
+                        .photo(new InputFile(is, "send.jpg"))
+                        .build());
                 } catch (IOException e) {
                     log.error("Ошибка при отправке изображения в Telegram.", e);
                     sendMessage(chatId, "Ошибка при отправке изображения в Telegram.");
@@ -152,10 +146,11 @@ public class SntBot extends TelegramLongPollingBot {
             }
         } else if (Buttons.BUTTON_03.getCallback().equals(callData)) {
             sendMessage(chatId, "Направляю вам фотографии обращений: ");
-            List<UserFile> keys = user.getFiles();
-            if (!keys.isEmpty()) {
-                for (UserFile k : keys) {
-                    sendFiles(chatId, fileService.getFile(k.getKey()).getBase64());
+            List<UserFile> userFileList = user.getFiles();
+            if (!userFileList.isEmpty()) {
+                for (UserFile userFile : userFileList) {
+                    String base64 = fileService.downloadFile(userFile.getKey()).getBase64();
+                    sendFiles(chatId, base64);
                 }
                 sendMessage(chatId, "Вы что-то еще хотели сделать? Напишите в чат да или нет");
             } else {
@@ -166,26 +161,18 @@ public class SntBot extends TelegramLongPollingBot {
 
     public void handleMessage(final Message message) {
         final Long chatId = message.getChatId();
-        final String userName = message.getChat().getUserName();
         final String text = message.getText();
 
         switch (text.toLowerCase()) {
             case "/start":
-                startCommand(chatId, userName);
-                userRegistrationHandler.registrationUser(message);
-                try {
-                    execute(hermitageInlineKeyboardAb(chatId));
-                } catch (TelegramApiException e) {
-                    log.error("Ошибка при выполнении команды /start", e);
-                    sendMessage(chatId, "Что-то пошло не так");
-                }
+                startProcess(message);
                 break;
             case "да":
                 try {
-                    execute(hermitageInlineKeyboardAb(chatId));
+                    execute(prepareKeyBoardSendMessage(chatId));
                 } catch (TelegramApiException e) {
                     log.error("Ошибка при выполнении команды: да", e);
-                    sendMessage(chatId, "Что-то пошло не так");
+                    sendMessage(chatId, Messages.SOMETHING_WENT_WRONG);
                 }
                 break;
             case "нет":
@@ -193,19 +180,19 @@ public class SntBot extends TelegramLongPollingBot {
                 break;
             case "привет":
                 try {
-                    execute(hermitageInlineKeyboardAb(chatId));
+                    execute(prepareKeyBoardSendMessage(chatId));
                 } catch (TelegramApiException e) {
                     log.error("Ошибка при выполнении команды: привет", e);
-                    sendMessage(chatId, "Что-то пошло не так");
+                    sendMessage(chatId, Messages.SOMETHING_WENT_WRONG);
                 }
                 break;
             default:
 
-                sendMessage(chatId, "Что-то пошло не так");
+                sendMessage(chatId, Messages.SOMETHING_WENT_WRONG);
         }
     }
 
-    public void startCommand(final Long chatId, final String userName) {
+    public void sendText(final Long chatId, final String userName) {
         final var text = """
             Добро пожаловать в бот СНТ Аэрофлот-1, %s!
 

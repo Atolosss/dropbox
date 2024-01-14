@@ -39,7 +39,7 @@ public class UserService {
         var userId = msg.getFrom().getId();
         var chat = msg.getChat();
 
-        if (userRepository.findUserByTelegramUserId(userId) == null) {
+        if (userRepository.findUserByTelegramUserId(userId).isEmpty()) {
             createUser(UserRegistrationRq.builder()
                 .telegramUserId(userId)
                 .firstName(chat.getFirstName())

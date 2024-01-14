@@ -5,23 +5,19 @@ import com.dropbox.constant.ErrorCode;
 import com.dropbox.exceptions.ServiceException;
 import com.dropbox.mapper.FileMapper;
 import com.dropbox.model.dto.UploadFileRs;
-import com.dropbox.model.entity.User;
-import com.dropbox.model.entity.UserFile;
 import com.dropbox.model.openapi.FileRs;
 import com.dropbox.model.openapi.UploadFileDtoRq;
 import com.dropbox.model.openapi.UploadFileDtoRs;
-import com.dropbox.repository.FileRepository;
 import com.dropbox.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Base64;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -30,29 +26,20 @@ public class FileService {
 
     private final FileMapper fileMapper;
     private final UserRepository userRepository;
-    private final FileRepository fileRepository;
     private final FileStorageClient fileStorageClient;
+    private final FileHelperService fileHelperService;
 
     public FileRs createFile(final UploadFileDtoRq uploadFileDtoRq) {
         userRepository.findUserByTelegramUserId(uploadFileDtoRq.getUserId())
             .orElseThrow(() -> new ServiceException(ErrorCode.ERR_CODE_001, uploadFileDtoRq.getUserId()));
 
         final UploadFileRs uploadFileRs = fileStorageClient.uploadFile(uploadFileDtoRq);
-        saveFile(uploadFileDtoRq, uploadFileRs);
+
+        fileHelperService.saveFile(uploadFileDtoRq, uploadFileRs);
         return fileMapper.toFileRs(uploadFileDtoRq, uploadFileRs);
     }
 
-    @Transactional
-    public void saveFile(final UploadFileDtoRq uploadFileDtoRq, final UploadFileRs uploadFileRs) {
-        User user = userRepository.findUserByTelegramUserId(uploadFileDtoRq.getUserId())
-            .orElseThrow(() -> new ServiceException(ErrorCode.ERR_CODE_001, uploadFileDtoRq.getUserId()));
-        UserFile userFile = fileMapper.toUserFile(uploadFileDtoRq, uploadFileRs, user);
-        fileRepository.save(userFile);
-        List<UserFile> files = user.getFiles();
-        files.add(userFile);
-    }
-
-    public UploadFileDtoRs getFile(final String fileKey) {
+    public UploadFileDtoRs downloadFile(final String fileKey) {
         final DataBuffer downloadFile = fileStorageClient.downloadFile(fileKey);
         try (InputStream inputStream = downloadFile.asInputStream()) {
             final String encoded = Base64.getEncoder().encodeToString(inputStream.readAllBytes());
@@ -61,5 +48,25 @@ public class FileService {
             throw new IllegalStateException(e);
         }
     }
+
+    public String uploadFile(final Message message, byte[] fileContent) {
+        final String encodedFile = Base64.getEncoder().encodeToString(fileContent);
+
+        final UploadFileDtoRq uploadFileDtoRq = UploadFileDtoRq.builder()
+            .name(message.getCaption())
+            .userId(message.getFrom().getId())
+            .base64Data(encodedFile)
+            .build();
+        if (message.getCaption() != null) {
+            final FileRs fileRs = createFile(uploadFileDtoRq);
+            log.info(fileRs.toString());
+            return "Ваше обращение принято, могу ли я вам еще чем нибудь помочь? Напишите в чат да или нет";
+        } else {
+            return "Требуется описать проблему!";
+        }
+
+    }
+
+
 
 }

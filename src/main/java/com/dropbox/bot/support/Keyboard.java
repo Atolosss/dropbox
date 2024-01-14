@@ -11,7 +11,7 @@ import java.util.List;
 
 @Component
 public class Keyboard {
-    public static SendMessage hermitageInlineKeyboardAb(final long chatId) {
+    public static SendMessage prepareKeyBoardSendMessage(final long chatId) {
         final SendMessage message = new SendMessage();
         message.setChatId(chatId);
         message.setText("Выберите дальнейшие действие:");

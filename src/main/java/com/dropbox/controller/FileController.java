@@ -22,7 +22,7 @@ public class FileController implements FileApi {
 
     @Override
     public ResponseEntity<UploadFileDtoRs> getFile(final String id) {
-        return ResponseEntity.ok(fileService.getFile(id));
+        return ResponseEntity.ok(fileService.uploadFile(id));
     }
 
 }
