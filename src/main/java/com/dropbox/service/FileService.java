@@ -33,17 +33,23 @@ public class FileService {
     private final FileRepository fileRepository;
     private final FileStorageClient fileStorageClient;
 
-    @Transactional
     public FileRs createFile(final UploadFileDtoRq uploadFileDtoRq) {
-        User user = userRepository.findUserByTelegramUserId(uploadFileDtoRq.getUserId())
+        userRepository.findUserByTelegramUserId(uploadFileDtoRq.getUserId())
             .orElseThrow(() -> new ServiceException(ErrorCode.ERR_CODE_001, uploadFileDtoRq.getUserId()));
 
         final UploadFileRs uploadFileRs = fileStorageClient.uploadFile(uploadFileDtoRq);
-        fileRepository.save(fileMapper.toUserFile(uploadFileDtoRq, uploadFileRs, user));
-        List<UserFile> files = user.getFiles();
-        files.add(fileMapper.toUserFile(uploadFileDtoRq, uploadFileRs, user));
-        userRepository.save(user);
+        saveFile(uploadFileDtoRq, uploadFileRs);
         return fileMapper.toFileRs(uploadFileDtoRq, uploadFileRs);
+    }
+
+    @Transactional
+    public void saveFile(final UploadFileDtoRq uploadFileDtoRq, final UploadFileRs uploadFileRs) {
+        User user = userRepository.findUserByTelegramUserId(uploadFileDtoRq.getUserId())
+            .orElseThrow(() -> new ServiceException(ErrorCode.ERR_CODE_001, uploadFileDtoRq.getUserId()));
+        UserFile userFile = fileMapper.toUserFile(uploadFileDtoRq, uploadFileRs, user);
+        fileRepository.save(userFile);
+        List<UserFile> files = user.getFiles();
+        files.add(userFile);
     }
 
     public UploadFileDtoRs getFile(final String fileKey) {
