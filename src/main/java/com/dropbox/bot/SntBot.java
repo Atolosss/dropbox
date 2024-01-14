@@ -183,14 +183,23 @@ public class SntBot extends TelegramLongPollingBot {
                 try {
                     execute(hermitageInlineKeyboardAb(chatId));
                 } catch (TelegramApiException e) {
-                    log.error("Ошибка при выполнении команды /да", e);
+                    log.error("Ошибка при выполнении команды: да", e);
                     sendMessage(chatId, "Что-то пошло не так");
                 }
                 break;
             case "нет":
-                sendMessage(chatId, "Если вам что-то еще понадобится, напишите /start");
+                sendMessage(chatId, "Если вам что-то еще понадобится, напишите привет");
+                break;
+            case "привет":
+                try {
+                    execute(hermitageInlineKeyboardAb(chatId));
+                } catch (TelegramApiException e) {
+                    log.error("Ошибка при выполнении команды: привет", e);
+                    sendMessage(chatId, "Что-то пошло не так");
+                }
                 break;
             default:
+
                 sendMessage(chatId, "Что-то пошло не так");
         }
     }
