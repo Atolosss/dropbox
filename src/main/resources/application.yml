@@ -34,5 +34,5 @@ spring:
     show-sql: true
 telegram:
   bot:
-    name: SNTAeroflotAssistant
+    name: komarov_cnt_bot
     token: 6761589731:AAG95kAz3-FVgEnjSw0z_qhkB973E_dZyes

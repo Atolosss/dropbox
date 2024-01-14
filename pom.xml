@@ -20,6 +20,8 @@
         <springdoc-openapi-starter-webmvc-ui.version>2.2.0</springdoc-openapi-starter-webmvc-ui.version>
         <openapi-generator-maven-plugin.version>7.0.1</openapi-generator-maven-plugin.version>
         <logbook-spring-boot-starter.version>3.6.0</logbook-spring-boot-starter.version>
+        <telegrambots.version>6.7.0</telegrambots.version>
+        <spotbugs-annotations.version>4.7.3</spotbugs-annotations.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -84,18 +86,13 @@
         <dependency>
             <groupId>com.github.spotbugs</groupId>
             <artifactId>spotbugs-annotations</artifactId>
-            <version>4.7.3</version>
+            <version>${spotbugs-annotations.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.telegram</groupId>
             <artifactId>telegrambots</artifactId>
-            <version>6.7.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
+            <version>${telegrambots.version}</version>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>

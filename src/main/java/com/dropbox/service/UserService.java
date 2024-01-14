@@ -10,6 +10,7 @@ import com.dropbox.model.openapi.UserRs;
 import com.dropbox.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.objects.Message;
 
 @Service
 @AllArgsConstructor
@@ -25,13 +26,26 @@ public class UserService {
 
     public void deleteUser(final Long id) {
         final User user = userRepository.findById(id)
-                .orElseThrow();
+            .orElseThrow();
         userRepository.delete(user);
     }
 
     public UserRs getUser(final Long id) {
         final User user = userRepository.findById(id).orElseThrow(() -> new ServiceException(ErrorCode.ERR_CODE_002, "User with this id %s not found"));
         return userMapper.toUserRs(user);
+    }
+
+    public void registrationUser(final Message msg) {
+        var userId = msg.getFrom().getId();
+        var chat = msg.getChat();
+
+        if (userRepository.findUserByTelegramUserId(userId) == null) {
+            createUser(UserRegistrationRq.builder()
+                .telegramUserId(userId)
+                .firstName(chat.getFirstName())
+                .lastName(chat.getLastName())
+                .build());
+        }
     }
 
 }

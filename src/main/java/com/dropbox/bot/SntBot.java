@@ -2,15 +2,14 @@ package com.dropbox.bot;
 
 import com.dropbox.bot.enums.Buttons;
 import com.dropbox.bot.handlers.UserRegistrationHandler;
+import com.dropbox.configuration.TelegramBotConfiguration;
 import com.dropbox.model.entity.User;
 import com.dropbox.model.entity.UserFile;
 import com.dropbox.model.openapi.FileRs;
 import com.dropbox.model.openapi.UploadFileDtoRq;
 import com.dropbox.repository.UserRepository;
 import com.dropbox.service.FileService;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.GetFile;
@@ -38,21 +37,25 @@ public class SntBot extends TelegramLongPollingBot {
     private final FileService fileService;
     private final UserRegistrationHandler userRegistrationHandler;
     private final UserRepository userRepository;
+    private final TelegramBotConfiguration telegramBotConfiguration;
 
-    public SntBot(@Value("${telegram.bot.token}") final String botToken, final FileService fileService, final UserRegistrationHandler userRegistrationHandler, final UserRepository userRepository) {
-        super(botToken);
+    public SntBot(final TelegramBotConfiguration telegramBotConfiguration,
+                  final FileService fileService,
+                  final UserRegistrationHandler userRegistrationHandler,
+                  final UserRepository userRepository) {
+        super(telegramBotConfiguration.getToken());
 
         this.fileService = fileService;
         this.userRegistrationHandler = userRegistrationHandler;
         this.userRepository = userRepository;
+        this.telegramBotConfiguration = telegramBotConfiguration;
     }
 
     @Override
     public String getBotUsername() {
-        return "komarov_cnt_bot";
+        return telegramBotConfiguration.getName();
     }
 
-    @SneakyThrows
     @Override
     public void onUpdateReceived(final Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
@@ -62,10 +65,6 @@ public class SntBot extends TelegramLongPollingBot {
         } else if (update.hasMessage() && update.getMessage().hasPhoto()) {
             getFile(update.getMessage());
         }
-    }
-
-    private byte[] getDecode(final String k) {
-        return Base64.getDecoder().decode(k);
     }
 
     private String getFilePath(final String fileId) throws TelegramApiException {
@@ -78,34 +77,35 @@ public class SntBot extends TelegramLongPollingBot {
         return Files.readAllBytes(downloadFile.toPath());
     }
 
-    private String encodeFileToBase64(final byte[] fileContent) {
-        return Base64.getEncoder().encodeToString(fileContent);
-    }
+    public void getFile(final Message message) {
+        try {
+            final String fileId = message.getPhoto().get(0).getFileId();
+            final String fileCaptcha = message.getCaption();
+            final String filePath = getFilePath(fileId);
+            final byte[] fileContent = downloadFileContent(filePath);
+            final String encodedFile = Base64.getEncoder().encodeToString(fileContent);
 
-    public void getFile(final Message message) throws TelegramApiException, IOException {
-        final String fileId = message.getPhoto().get(0).getFileId();
-        final String fileCaptcha = message.getCaption();
-        final String filePath = getFilePath(fileId);
-        final byte[] fileContent = downloadFileContent(filePath);
-        final String encodedFile = encodeFileToBase64(fileContent);
-
-        final UploadFileDtoRq uploadFileDtoRq = UploadFileDtoRq.builder()
+            final UploadFileDtoRq uploadFileDtoRq = UploadFileDtoRq.builder()
                 .name(fileCaptcha)
                 .userId(message.getFrom().getId())
                 .base64Data(encodedFile)
                 .build();
-        if (fileCaptcha != null) {
-            final FileRs fileRs = fileService.createFile(uploadFileDtoRq);
-            log.info(fileRs.toString());
-            sendMessage(message.getChatId(), "Ваше обращение принято, могу ли я вам еще чем нибудь помочь? Напишите в чат да или нет");
-        } else {
-            sendMessage(message.getChatId(), "Требуется описать проблему!");
+            if (fileCaptcha != null) {
+                final FileRs fileRs = fileService.createFile(uploadFileDtoRq);
+                log.info(fileRs.toString());
+                sendMessage(message.getChatId(), "Ваше обращение принято, могу ли я вам еще чем нибудь помочь? Напишите в чат да или нет");
+            } else {
+                sendMessage(message.getChatId(), "Требуется описать проблему!");
+            }
+        } catch (TelegramApiException | IOException e) {
+            log.error(e.getMessage(), e);
         }
+
     }
 
     public void sendFiles(final Long chatId, final String k) {
         try {
-            final byte[] fileContent = getDecode(k);
+            final byte[] fileContent = Base64.getDecoder().decode(k);
 
             if (fileContent != null) {
                 try (InputStream is = new ByteArrayInputStream(fileContent)) {
@@ -132,7 +132,8 @@ public class SntBot extends TelegramLongPollingBot {
         final long chatId = callbackQuery.getMessage().getChatId();
         final Long userId = callbackQuery.getFrom().getId();
 
-        final User user = userRepository.findUserByTelegramUserId(userId);
+        final User user = userRepository.findUserByTelegramUserId(userId)
+            .orElseThrow();
 
         if (Buttons.BUTTON_01.getCallback().equals(callData)) {
             sendMessage(chatId, "Отправьте фотографию и опишите проблему");
@@ -206,11 +207,11 @@ public class SntBot extends TelegramLongPollingBot {
 
     public void startCommand(final Long chatId, final String userName) {
         final var text = """
-                Добро пожаловать в бот СНТ Аэрофлот-1, %s!
+            Добро пожаловать в бот СНТ Аэрофлот-1, %s!
 
-                Здесь Вы сможете сообщить обо всех неисправностях или пожеланиях приложив фотограции.
+            Здесь Вы сможете сообщить обо всех неисправностях или пожеланиях приложив фотограции.
 
-                """;
+            """;
         final var formattedText = String.format(text, userName);
         sendMessage(chatId, formattedText);
     }
