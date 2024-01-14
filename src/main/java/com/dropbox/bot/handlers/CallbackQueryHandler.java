@@ -7,7 +7,6 @@ import com.dropbox.repository.UserRepository;
 import com.dropbox.service.FileService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 
@@ -16,7 +15,6 @@ import java.util.List;
 @Component
 @Slf4j
 @AllArgsConstructor
-@Lazy
 public class CallbackQueryHandler {
     private final UserRepository userRepository;
     private final BotCommandHandler botCommandHandler;
@@ -41,7 +39,7 @@ public class CallbackQueryHandler {
                     number++;
                     botCommandHandler.sendMessage(chatId, number + ". " + f.getDescription());
                 }
-                botCommandHandler.sendMessage(chatId, "Вы что-то еще хотели сделать?");
+                botCommandHandler.sendMessage(chatId, "Вы что-то еще хотели сделать? Напишите в чат да или нет");
             } else {
                 botCommandHandler.sendMessage(chatId, "От вас обращений пока не поступало");
             }
@@ -52,7 +50,7 @@ public class CallbackQueryHandler {
                 for (UserFile k : keys) {
                     fileHandler.sendFiles(chatId, fileService.getFile(k.getKey()).getBase64());
                 }
-                botCommandHandler.sendMessage(chatId, "Вы что-то еще хотели сделать?");
+                botCommandHandler.sendMessage(chatId, "Вы что-то еще хотели сделать? Напишите в чат да или нет");
             } else {
                 botCommandHandler.sendMessage(chatId, "От вас обращений пока не поступало");
             }

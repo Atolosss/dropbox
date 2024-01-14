@@ -3,7 +3,6 @@ package com.dropbox.bot.handlers;
 import com.dropbox.bot.SntBot;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -14,7 +13,6 @@ import static com.dropbox.bot.support.Keyboard.hermitageInlineKeyboardAb;
 @Component
 @AllArgsConstructor
 @Slf4j
-@Lazy
 public class BotCommandHandler {
     private final SntBot sntBot;
     private final UserRegistrationHandler userRegistrationHandler;
@@ -35,7 +33,7 @@ public class BotCommandHandler {
                     sendMessage(chatId, "Что-то пошло не так");
                 }
                 break;
-            case "/да":
+            case "да":
                 try {
                     sntBot.execute(hermitageInlineKeyboardAb(chatId));
                 } catch (TelegramApiException e) {
@@ -43,7 +41,7 @@ public class BotCommandHandler {
                     sendMessage(chatId, "Что-то пошло не так");
                 }
                 break;
-            case "/нет":
+            case "нет":
                 sendMessage(chatId, "Если вам что-то еще понадобится, напишите /start");
                 break;
             default:

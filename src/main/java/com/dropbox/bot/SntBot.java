@@ -32,7 +32,6 @@ public class SntBot extends TelegramLongPollingBot {
     @SneakyThrows
     @Override
     public void onUpdateReceived(final Update update) {
-
         if (update.hasMessage() && update.getMessage().hasText()) {
             botCommandHandler.handleMessage(update.getMessage());
         } else if (update.hasCallbackQuery()) {
@@ -42,14 +41,3 @@ public class SntBot extends TelegramLongPollingBot {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
