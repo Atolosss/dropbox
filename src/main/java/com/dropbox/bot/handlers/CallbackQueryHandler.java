@@ -5,8 +5,9 @@ import com.dropbox.model.entity.User;
 import com.dropbox.model.entity.UserFile;
 import com.dropbox.repository.UserRepository;
 import com.dropbox.service.FileService;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 
@@ -14,7 +15,8 @@ import java.util.List;
 
 @Component
 @Slf4j
-@RequiredArgsConstructor
+@AllArgsConstructor
+@Lazy
 public class CallbackQueryHandler {
     private final UserRepository userRepository;
     private final BotCommandHandler botCommandHandler;

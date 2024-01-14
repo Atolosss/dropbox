@@ -1,8 +1,9 @@
 package com.dropbox.bot.handlers;
 
 import com.dropbox.bot.SntBot;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -11,8 +12,9 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import static com.dropbox.bot.support.Keyboard.hermitageInlineKeyboardAb;
 
 @Component
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Slf4j
+@Lazy
 public class BotCommandHandler {
     private final SntBot sntBot;
     private final UserRegistrationHandler userRegistrationHandler;
